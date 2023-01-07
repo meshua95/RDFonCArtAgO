@@ -1,0 +1,134 @@
+@prefix : <http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch> .
+
+<http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch> rdf:type owl:Ontology ;
+                                                                                  rdfs:comment "This is an ontology about a lamp and a light switch"@en .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#connectedTo
+:connectedTo rdf:type owl:ObjectProperty ;
+             rdfs:domain :LightSwitch .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#press
+:press rdf:type owl:ObjectProperty ;
+       rdfs:domain :LightSwitch .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#release
+:release rdf:type owl:ObjectProperty ;
+         rdfs:domain :LightSwitch .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#turn_off
+:turn_off rdf:type owl:ObjectProperty ;
+          rdfs:domain :Lamp .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#turn_on
+:turn_on rdf:type owl:ObjectProperty ;
+         rdfs:domain :Lamp .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#isPressed
+:isPressed rdf:type owl:DatatypeProperty ;
+           rdfs:domain :LightSwitch ;
+           rdfs:range xsd:boolean ;
+           owl:propertyDisjointWith :isReleased .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#isReleased
+:isReleased rdf:type owl:DatatypeProperty ;
+            rdfs:domain :LightSwitch ;
+            rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#is_on
+:is_on rdf:type owl:DatatypeProperty ;
+       rdfs:domain :Lamp ;
+       rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#lampID
+:lampID rdf:type owl:DatatypeProperty ;
+        rdfs:domain :Lamp ;
+        rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#lightSwitchID
+:lightSwitchID rdf:type owl:DatatypeProperty ;
+               rdfs:domain :LightSwitch ;
+               rdfs:range xsd:string .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#Lamp
+:Lamp rdf:type owl:Class ;
+      owl:disjointWith :LightSwitch .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#LightSwitch
+:LightSwitch rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#Lamp1
+:Lamp1 rdf:type owl:NamedIndividual ,
+                :Lamp ;
+       :is_on "false"^^xsd:boolean ;
+       :lampID "L0001"^^xsd:string .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#Lamp2
+:Lamp2 rdf:type owl:NamedIndividual ,
+                :Lamp ;
+       :is_on "false"^^xsd:boolean ;
+       :lampID "L0002"^^xsd:string .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#Switch1
+:Switch1 rdf:type owl:NamedIndividual ;
+         :connectedTo :Lamp1 ;
+         :isReleased "true"^^xsd:boolean ;
+         :lightSwitchID "S0001"^^xsd:string .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#Switch2
+:Switch2 rdf:type owl:NamedIndividual ;
+         :connectedTo :Lamp1 ;
+         :isReleased "false"^^xsd:boolean ;
+         :lightSwitchID "S0002"^^xsd:string .
+
+
+###  http://www.semanticweb.org/meshuagalassi/ontologies/2022/11/LampAndLightSwitch#Switch3
+:Switch3 rdf:type owl:NamedIndividual ;
+         :connectedTo :Lamp2 ;
+         :isReleased "true"^^xsd:boolean ;
+         :lightSwitchID "S0003"^^xsd:string .
+
+#################################################################
+#    Annotations
+#################################################################
+
+owl:topObjectProperty rdfs:comment "" .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
