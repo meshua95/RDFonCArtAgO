@@ -2,14 +2,20 @@ package it.unibo.tesi.jena;
 
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.RDFDataMgr;
 
 public class UseLampAndLightSwitch {
 
     public static void main(String[] args) {
         String fileName = "src/main/resources/LampAndLightSwitch.ttl";
 
-        Model model = ModelFactory.createDefaultModel() ;
+        Model model = RDFDataMgr.loadModel(fileName);
+
+        /**
+         * altro modo per caricare il ttl*/
+        /*Model model = ModelFactory.createDefaultModel() ;
         model.read(fileName);
+        */
 
         query1(model);
 

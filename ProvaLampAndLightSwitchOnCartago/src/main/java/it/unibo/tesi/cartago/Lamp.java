@@ -4,15 +4,13 @@ import cartago.*;
 
 public class Lamp extends Artifact {
 
-    void init(boolean isOn){
-        if(isOn){
-        defineObsProperty("state", "on");
-        } else {
-            defineObsProperty("state", "off");
-        }
+    private boolean isOn = false;
+    void init(){
+        defineObsProperty("is_on", "off");
     }
 
-    @LINK void tourn_on(){
+    @OPERATION
+    void turn_on(){
         ObsProperty prop = getObsProperty("state");
         if(prop.getValue().equals("off")) {
             prop.updateValue("on");
@@ -20,7 +18,8 @@ public class Lamp extends Artifact {
         }
     }
 
-    @LINK void tourn_off(){
+    @OPERATION
+    void turn_off(){
         ObsProperty prop = getObsProperty("state");
         if(prop.getValue().equals("on")) {
             prop.updateValue("off");
