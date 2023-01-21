@@ -1,4 +1,4 @@
-package it.unibo.tesi.extension.RDFtoCArtAgO.ttlData;
+package it.unibo.tesi.ttlData;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFDataMgr;

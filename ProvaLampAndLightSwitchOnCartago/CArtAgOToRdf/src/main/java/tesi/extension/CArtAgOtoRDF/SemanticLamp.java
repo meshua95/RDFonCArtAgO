@@ -1,10 +1,9 @@
-package it.unibo.tesi.extension.CArtAgOtoRDF;
+package tesi.extension.CArtAgOtoRDF;
 
 import cartago.Artifact;
 import cartago.OPERATION;
 import cartago.ObsProperty;
 import cartago.OpFeedbackParam;
-import org.apache.jena.rdf.model.*;
 
 public class SemanticLamp extends Artifact{
 

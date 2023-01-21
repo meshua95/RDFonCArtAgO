@@ -1,4 +1,4 @@
-package it.unibo.tesi.extension;
+package it.unibo.tesi;
 
 public class Utils {
     public static final String owlNameSpace = "http://www.w3.org/2002/07/owl#";

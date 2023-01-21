@@ -1,7 +1,6 @@
-package it.unibo.tesi.extension.RDFtoCArtAgO;
+package tesi;
 
-import cartago.*;
-import it.unibo.tesi.extension.RDFtoCArtAgO.ttlData.RDFUtils;
+import it.unibo.tesi.ttlData.RDFUtils;
 
 import java.util.List;
 

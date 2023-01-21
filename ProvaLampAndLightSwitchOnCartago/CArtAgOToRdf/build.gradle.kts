@@ -1,19 +1,18 @@
 plugins {
-    id("java")
+    `java-library`
 }
-
-group = "org.example"
-version = "unspecified"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-}
+    implementation("org.apache.jena:apache-jena-libs:4.5.0")
+    implementation ("org.slf4j:slf4j-simple:1.7.9")
+    implementation("org.apache.jena:jena-arq:4.4.0")
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
+    //implementation("org.jacamo:jacamo:1.1")
+
+    implementation(files("src/main/resources/cartago.jar"))
+    implementation(files("src/main/resources/c4jason.jar"))
 }

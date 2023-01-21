@@ -1,4 +1,4 @@
-package it.unibo.tesi.cartago;
+package org.cartago;
 
 import cartago.*;
 

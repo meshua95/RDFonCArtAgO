@@ -1,6 +1,5 @@
-package it.unibo.tesi.extension.CArtAgOtoRDF;
+package tesi.extension.CArtAgOtoRDF;
 
-import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFDataMgr;
 
 public class SemanticEnvironment {
