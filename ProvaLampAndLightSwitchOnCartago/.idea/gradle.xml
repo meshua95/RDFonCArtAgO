@@ -10,6 +10,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/CArtAgOToRdf" />
+            <option value="$PROJECT_DIR$/example" />
+            <option value="$PROJECT_DIR$/rdfToCArtAgo" />
             <option value="$PROJECT_DIR$/test-agent" />
           </set>
         </option>
