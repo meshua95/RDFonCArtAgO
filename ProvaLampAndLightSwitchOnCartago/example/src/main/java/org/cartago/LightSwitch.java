@@ -2,11 +2,7 @@ package org.cartago;
 
 import cartago.*;
 
-@ARTIFACT_INFO(
-        outports = {
-                @OUTPORT(name = "out-1")
-        }
-) public class LightSwitch extends Artifact {
+public class LightSwitch extends Artifact {
 
     void init(){
         defineObsProperty("pressed", false);
