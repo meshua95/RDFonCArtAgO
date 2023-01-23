@@ -75,20 +75,6 @@ public class SemanticEnvironment {
         model.add(model.createStatement(operation, domainProperty, classResource));
     }
 
-    /*private void availableOperations(){
-
-        log("methods number: " + methods.length);
-        for (Method method : methods) {
-            log("METHOD ->" + method.getName());
-            Annotation[] ann = method.getAnnotations();
-            for(int i = 0; i < ann.length; i++){
-                log("ANN ->" + ann[i].toString());
-            }
-
-            //environment.addOperation(method.getName(), this.getClass().getSimpleName());
-        }
-    }*/
-
     public void addSignaledEvent(String eventName, String resourceName){
         Resource event = model.createResource(eventName);
         Property domainProperty = model.createProperty(rdfSchemaNamespace, "domain");

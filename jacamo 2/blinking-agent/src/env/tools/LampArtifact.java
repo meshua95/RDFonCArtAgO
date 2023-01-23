@@ -28,9 +28,9 @@ public class LampArtifact extends Artifact {
 		log("created");
 
 		environment.addDataProperty(className, id, statePropertyName, on);
-		log(environment.printAllStatement());
 
 		availableOperations();
+		//log(environment.printAllStatement());
 	}
 
 	@OPERATION void getCurrentState(OpFeedbackParam<Boolean> state) {
@@ -38,14 +38,23 @@ public class LampArtifact extends Artifact {
 		state.set(this.on);
 		log("state retrieved.");
 	}
-	@OPERATION void switchOn() { this.switchTo(true); }
-	@OPERATION void switchOff() { this.switchTo(false); }
+	@LINK void switchOn() { this.switchTo(true); }
+	@LINK void switchOff() { this.switchTo(false); }
 
 	private void switchTo(boolean on) {
 		log("switching " + (on ? "on" : "off") + "...");
 		this.on = on;
 		ObsProperty state = getObsProperty(statePropertyName);	//get the object modelling the observable property "state"
-		state.updateValue(this.on); 					//update the value of the observable property "state", triggering the plans of the agents observing this property
+		state.updateValue(this.on);
+		if(this.on){
+			environment.removeEvent(isOffEvent, this.getClass().getSimpleName());
+			environment.addSignaledEvent(isOnEvent, this.getClass().getSimpleName());
+			signal(isOnEvent);
+		} else {
+			environment.removeEvent(isOnEvent, this.getClass().getSimpleName());
+			environment.addSignaledEvent(isOffEvent, this.getClass().getSimpleName());
+			signal(isOffEvent);
+		}
 		log("switched " + (on ? "on" : "off") + ".");
 	}
 
@@ -53,7 +62,6 @@ public class LampArtifact extends Artifact {
 		String className = this.getClass().getSimpleName();
 		Method[] methods = this.getClass().getDeclaredMethods();
 		for (Method method : methods) {
-			log("METHOD ->" + method.getName());
 			Annotation[] annotations = method.getAnnotations();
 			for(Annotation ann: annotations){
 				if(ann.annotationType().getSimpleName().equals("OPERATION")){
@@ -62,52 +70,6 @@ public class LampArtifact extends Artifact {
 
 			}
 		}
-		/*
-		for (Method method : methods) {
-			log("METHOD ->" + method.getName());
-			Annotation[] ann = method.getAnnotations();
-			for(int i = 0; i < ann.length; i++){
-				log("ANN ->" + ann[i].toString());
-			}
 
-			//
-		}*/
 	}
 }
-
-/*
-public class SemanticLamp extends Artifact{
-
-	@OPERATION void getCurrentState(OpFeedbackParam<Boolean> state) {
-		log("getting the state...");
-		state.set(this.on);
-		log("state retrieved.");
-	}
-
-	@OPERATION
-	void turnOn(){
-		turnState(true);
-		//semanticTurnOn();
-	}
-
-	@OPERATION
-	void turnOff(){
-		turnState(false);
-		//semanticTurnOff();
-	}
-
-	private void turnState(boolean newState){
-		ObsProperty stateProperty = getObsProperty(porpertyName);
-		this.on = newState;
-		if(!newState && stateProperty.getValue().equals(true)) {
-			stateProperty.updateValue(this.on);
-			signal(isOffEvent);
-		}
-
-		if(newState && stateProperty.getValue().equals(false)) {
-			stateProperty.updateValue(this.on);
-			signal(isOffEvent);
-		}
-	}
-
-}*/
