@@ -1,10 +1,6 @@
 package tools;
 
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.RDFDataMgr;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 public class SemanticEnvironment {
 
@@ -14,7 +10,7 @@ public class SemanticEnvironment {
     public static final String xmlSchemaNamespace =  "http://www.w3.org/2001/XMLSchema#";
 
     private static SemanticEnvironment instance = null;
-    private Model model;
+    private final Model model;
 
     private SemanticEnvironment(){
         model = ModelFactory.createDefaultModel();
@@ -45,41 +41,34 @@ public class SemanticEnvironment {
         model.add(model.createStatement(idResource, typeProperty, owlType));
     }
 
-    public void addDataProperty(String resourceName, String resourceId, String propertyName, Object propertyValue){
+    public void addDataProperty(String resourceName, String propertyName, String type) {
         //definizione della proprietà
         Resource propName = model.createResource(propertyName);
-        Property rangeProperty = model.getProperty(rdfSchemaNamespace, "range");
-        Resource typePropertyValue = model.createResource(xmlSchemaNamespace + propertyValue.getClass().getSimpleName());
-        model.add(model.createStatement(propName, rangeProperty, typePropertyValue));
-
-        Property domainProperty = model.createProperty(rdfSchemaNamespace, "domain");
+        setRange(propName, type);
         Resource classResource = model.getResource(resourceName);
-        model.add(model.createStatement(propName, domainProperty, classResource));
+        setDomain(propName, classResource);
+        setDataType(propName);
+    }
 
-        Property typeProperty = model.getProperty(rdfSyntaxNamespace, "type");
-        Resource typeResource = model.createResource(owlNamespace + "DatatypeProperty");
-        model.add(model.createStatement(propName, typeProperty, typeResource));
-
-        //definizione del valore
+    public void addDataPropertyValue(String resourceId, String propertyName, Object propertyValue){
+        Resource propName = model.createResource(propertyName);
         Resource id = model.getResource(resourceId);
         Property artifactProperty = model.getProperty(propName.getNameSpace(), propName.getLocalName());
         Literal value = model.createLiteral(String.valueOf(propertyValue), xmlSchemaNamespace);
         model.add(model.createStatement(id, artifactProperty, value));
-        printAllStatement();
     }
 
     public void addOperation(String operationName, String resourceName){
         Resource operation = model.createResource(operationName);
-        Property domainProperty = model.createProperty(rdfSchemaNamespace, "domain");
         Resource classResource = model.getResource(resourceName);
-        model.add(model.createStatement(operation, domainProperty, classResource));
+        setDomain(operation, classResource);
+        addDataProperty(resourceName, operationName, "OPERATION" );
     }
 
     public void addSignaledEvent(String eventName, String resourceName){
         Resource event = model.createResource(eventName);
-        Property domainProperty = model.createProperty(rdfSchemaNamespace, "domain");
         Resource classResource = model.getResource(resourceName);
-        model.add(model.createStatement(event, domainProperty, classResource));
+        setDomain(event, classResource);
     }
 
     public void removeEvent(String eventName, String resourceName){
@@ -101,4 +90,22 @@ public class SemanticEnvironment {
         }
         return output;
     }
+
+    private void setRange(Resource propName, String typeProperty){
+        Property rangeProperty = model.getProperty(rdfSchemaNamespace, "range");
+        Resource typePropertyValue = model.createResource(xmlSchemaNamespace + typeProperty);
+        model.add(model.createStatement(propName, rangeProperty, typePropertyValue));
+    }
+
+    private void setDomain(Resource propName, Resource classResource) {
+        Property domainProperty = model.createProperty(rdfSchemaNamespace, "domain");
+        model.add(model.createStatement(propName, domainProperty, classResource));
+    }
+
+    private void setDataType(Resource propName){
+        Property typeProperty = model.getProperty(rdfSyntaxNamespace, "type");
+        Resource typeResource = model.createResource(owlNamespace + "DatatypeProperty");
+        model.add(model.createStatement(propName, typeProperty, typeResource));
+    }
+
 }

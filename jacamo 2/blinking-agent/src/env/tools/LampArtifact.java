@@ -27,7 +27,8 @@ public class LampArtifact extends Artifact {
 		defineObsProperty(statePropertyName, this.on); //define a new property that can be observed by agents
 		log("created");
 
-		environment.addDataProperty(className, id, statePropertyName, on);
+		environment.addDataProperty(className, statePropertyName, "boolean");
+		environment.addDataPropertyValue(id, statePropertyName, this.on);
 
 		availableOperations();
 		//log(environment.printAllStatement());

@@ -32,8 +32,8 @@ public class LightSwitchArtifact extends Artifact {
         defineObsProperty(pressPropertyName, this.press); //define a new property that can be observed by agents
         log("created");
 
-        environment.addDataProperty(className, id, pressPropertyName, this.press);
-
+        environment.addDataProperty(className, pressPropertyName, "boolean");
+        environment.addDataPropertyValue(id, pressPropertyName, this.press);
         availableOperations();
 
         log(environment.printAllStatement());
