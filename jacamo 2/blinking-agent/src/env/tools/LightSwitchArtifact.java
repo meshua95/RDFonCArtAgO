@@ -25,15 +25,13 @@ public class LightSwitchArtifact extends Artifact {
     void init(String id, boolean isPressed){
         environment = SemanticEnvironment.getInstance();
         String className = this.getClass().getSimpleName();
-        environment.addOwlObject(className, id);
 
         log("creating...");
         this.press = isPressed;
         defineObsProperty(pressPropertyName, this.press); //define a new property that can be observed by agents
         log("created");
 
-        environment.addDataProperty(className, pressPropertyName, "boolean");
-        environment.addDataPropertyValue(id, pressPropertyName, this.press);
+        environment.defineDataProperty(className, id, pressPropertyName, this.press);
         availableOperations();
 
         log(environment.printAllStatement());

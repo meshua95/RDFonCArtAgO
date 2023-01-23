@@ -23,46 +23,21 @@ public class SemanticEnvironment {
         return instance;
     }
 
-    //crea una nuova risorsa
-    public void addOwlObject(String name, String id){
-        Resource classResource = model.getResource(name);
-        Resource resourceName = model.createResource(name);
-        Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
-
-        if(classResource.isAnon()) {
-            classResource = model.createProperty(owlNamespace, "Class");
-        }
-
-        //l'istanza di una classe deve avere un identificativo
-        Resource idResource = model.createResource(id);
-        model.add(model.createStatement(resourceName, typeProperty, classResource));
-        Resource owlType = model.createResource(owlNamespace + "NamedIndividual");
-        model.add(model.createStatement(idResource, typeProperty, resourceName));
-        model.add(model.createStatement(idResource, typeProperty, owlType));
-    }
-
-    public void addDataProperty(String resourceName, String propertyName, String type) {
-        //definizione della proprietà
-        Resource propName = model.createResource(propertyName);
-        setRange(propName, type);
+    public void defineDataProperty(String resourceName, String resourceId, String propertyName, Object propertyValue) {
         Resource classResource = model.getResource(resourceName);
-        setDomain(propName, classResource);
-        setDataType(propName);
-    }
-
-    public void addDataPropertyValue(String resourceId, String propertyName, Object propertyValue){
-        Resource propName = model.createResource(propertyName);
-        Resource id = model.getResource(resourceId);
-        Property artifactProperty = model.getProperty(propName.getNameSpace(), propName.getLocalName());
-        Literal value = model.createLiteral(String.valueOf(propertyValue), xmlSchemaNamespace);
-        model.add(model.createStatement(id, artifactProperty, value));
+        if(classResource.isAnon()){
+            addOwlObject(resourceName, resourceId);
+            classResource = model.getResource(resourceName);
+        }
+        addDataProperty(classResource, propertyName, propertyValue.getClass().getSimpleName());
+        addDataPropertyValue(resourceId, propertyName, propertyValue);
     }
 
     public void addOperation(String operationName, String resourceName){
         Resource operation = model.createResource(operationName);
         Resource classResource = model.getResource(resourceName);
         setDomain(operation, classResource);
-        addDataProperty(resourceName, operationName, "OPERATION" );
+        addDataProperty(classResource, operationName, "OPERATION" );
     }
 
     public void addSignaledEvent(String eventName, String resourceName){
@@ -89,6 +64,40 @@ public class SemanticEnvironment {
                     + elem.getObject() + "\n";
         }
         return output;
+    }
+
+    //crea una nuova risorsa
+    private void addOwlObject(String name, String id){
+        Resource classResource = model.getResource(name);
+        Resource resourceName = model.createResource(name);
+        Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
+
+        if(classResource.isAnon()) {
+            classResource = model.createProperty(owlNamespace, "Class");
+        }
+
+        //l'istanza di una classe deve avere un identificativo
+        Resource idResource = model.createResource(id);
+        model.add(model.createStatement(resourceName, typeProperty, classResource));
+        Resource owlType = model.createResource(owlNamespace + "NamedIndividual");
+        model.add(model.createStatement(idResource, typeProperty, resourceName));
+        model.add(model.createStatement(idResource, typeProperty, owlType));
+    }
+
+    private void addDataProperty(Resource classResource, String propertyName, String type) {
+        //definizione della proprietà
+        Resource propName = model.createResource(propertyName);
+        setRange(propName, type);
+        setDomain(propName, classResource);
+        setDataType(propName);
+    }
+
+    private void addDataPropertyValue(String resourceId, String propertyName, Object propertyValue){
+        Resource propName = model.createResource(propertyName);
+        Resource id = model.getResource(resourceId);
+        Property artifactProperty = model.getProperty(propName.getNameSpace(), propName.getLocalName());
+        Literal value = model.createLiteral(String.valueOf(propertyValue), xmlSchemaNamespace);
+        model.add(model.createStatement(id, artifactProperty, value));
     }
 
     private void setRange(Resource propName, String typeProperty){

@@ -4,7 +4,6 @@ import cartago.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 public class LampArtifact extends Artifact {
 
@@ -21,15 +20,12 @@ public class LampArtifact extends Artifact {
 	public void init(String id, boolean isOn) throws Exception {
 		this.environment = SemanticEnvironment.getInstance();
 		String className = this.getClass().getSimpleName();
-		environment.addOwlObject(className, id);
 		log("creating...");
 		this.on = isOn;
 		defineObsProperty(statePropertyName, this.on); //define a new property that can be observed by agents
+		environment.defineDataProperty(className, id, statePropertyName, this.on);
+
 		log("created");
-
-		environment.addDataProperty(className, statePropertyName, "boolean");
-		environment.addDataPropertyValue(id, statePropertyName, this.on);
-
 		availableOperations();
 		//log(environment.printAllStatement());
 	}
