@@ -2,15 +2,7 @@ package tools;
 
 import cartago.*;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
-@ARTIFACT_INFO(
-        outports = {
-                @OUTPORT(name = "out-1")
-        }
-)
-public class LightSwitchArtifact extends Artifact {
+public class LightSwitchArtifact extends SemanticArtifact {
 
     SemanticEnvironment environment;
 
@@ -23,18 +15,14 @@ public class LightSwitchArtifact extends Artifact {
     private final String isReleasedEvent = "is_released";
 
     void init(String id, boolean isPressed){
-        environment = SemanticEnvironment.getInstance();
-        String className = this.getClass().getSimpleName();
+        super.init(this.getClass().getSimpleName(), id);
 
         log("creating...");
         this.press = isPressed;
-        defineObsProperty(pressPropertyName, this.press); //define a new property that can be observed by agents
+        defineObsProperty(pressPropertyName, this.press);
         log("created");
 
-        environment.defineDataProperty(className, id, pressPropertyName, this.press);
-        availableOperations();
-
-        log(environment.printAllStatement());
+        super.availableOperations(this);
     }
 
     @OPERATION
@@ -42,21 +30,7 @@ public class LightSwitchArtifact extends Artifact {
         ObsProperty prop = getObsProperty(pressPropertyName);
         this.press = true;
         prop.updateValue(this.press);
-        try {
-            execLinkedOp("out-1","switchOn");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        environment.removeEvent(isReleasedEvent, this.getClass().getSimpleName());
-        environment.addSignaledEvent(isPressedEvent, this.getClass().getSimpleName());
         signal(isPressedEvent);
-        log(environment.printAllStatement());
-    }
-
-    @OPERATION void getCurrentState(OpFeedbackParam<Boolean> state) {
-        log("getting the state...");
-        state.set(this.press);
-        log("state retrieved.");
     }
 
     @OPERATION
@@ -64,29 +38,7 @@ public class LightSwitchArtifact extends Artifact {
         ObsProperty prop = getObsProperty(pressPropertyName);
         this.press = false;
         prop.updateValue(this.press);
-        try {
-            execLinkedOp("out-1","switchOff");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        environment.removeEvent(isPressedEvent, this.getClass().getSimpleName());
-        environment.addSignaledEvent(isReleasedEvent, this.getClass().getSimpleName());
         signal(isReleasedEvent);
-        log(environment.printAllStatement());
-    }
-
-    private void availableOperations(){
-        String className = this.getClass().getSimpleName();
-        Method[] methods = this.getClass().getDeclaredMethods();
-        for (Method method : methods) {
-            Annotation[] annotations = method.getAnnotations();
-            for(Annotation ann: annotations){
-                if(ann.annotationType().getSimpleName().equals("OPERATION")){
-                    environment.addOperation(method.getName(), className);
-                }
-
-            }
-        }
     }
 
 }

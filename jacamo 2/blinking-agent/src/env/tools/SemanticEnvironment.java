@@ -41,12 +41,14 @@ public class SemanticEnvironment {
     }
 
     public void addSignaledEvent(String eventName, String resourceName){
+        //todo rivedi la gestione dell'evento sull'id e non sulla risorsa e aggiungi il timestamp
         Resource event = model.createResource(eventName);
         Resource classResource = model.getResource(resourceName);
+        //todo: se c'è già un evento associato alla risorsa si elimina e si aggiunge questo
         setDomain(event, classResource);
     }
 
-    public void removeEvent(String eventName, String resourceName){
+    private void removeEvent(String eventName, String resourceName){
         Resource event = model.createResource(eventName);
         Property domainProperty = model.createProperty(rdfSchemaNamespace, "domain");
         Resource classResource = model.getResource(resourceName);
