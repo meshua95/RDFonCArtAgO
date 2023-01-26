@@ -15,6 +15,7 @@ public abstract class SemanticArtifact extends Artifact {
         environment = SemanticEnvironment.getInstance();
         this.artifactClass = className.getClass().getSimpleName();
         this.artifactId = artifactId;
+        environment.createResource(artifactClass);
         setAvailableOperations(className);
     }
 
@@ -41,6 +42,7 @@ public abstract class SemanticArtifact extends Artifact {
             for(Annotation ann: annotations){
                 if(ann.annotationType().getSimpleName().equals("OPERATION")){
                     environment.addOperation(method.getName(), artifactClass);
+
                 }
             }
         }

@@ -30,6 +30,14 @@ public class SemanticEnvironment {
         return instance;
     }
 
+    public void createResource(String resourceName) {
+        Resource classResource = model.getResource(resourceName);
+        if(!model.containsResource(classResource)){
+            classResource = addOwlObject(resourceName);
+            setDeviceSubclass(classResource);
+        }
+    }
+
     /**
      * aggiunge una proprietà ad un oggetto di una classe
      *
@@ -39,7 +47,7 @@ public class SemanticEnvironment {
      * @param propertyValue valore della proprietà associata allla specifica istanza (es: false)
      */
     public void defineDataProperty(String resourceName, String resourceId, String propertyName, Object propertyValue) {
-        Resource classResource = getOwlObject(resourceName);
+        Resource classResource = model.getResource(resourceName);
         Resource resourceInstance = getResourceInstance(resourceId, classResource);
         addDataProperty(classResource, propertyName, propertyValue.getClass().getSimpleName());
         addDataPropertyValue(resourceInstance, propertyName, propertyValue);
@@ -66,15 +74,6 @@ public class SemanticEnvironment {
         setRange(propName, propertyType);
         setDomain(propName, classResource);
         setDataType(propName);
-    }
-
-    public Resource getOwlObject(String resourceName) {
-        Resource classResource = model.getResource(resourceName);
-        if(!model.containsResource(classResource)){
-            classResource = addOwlObject(resourceName);
-            setDeviceSubclass(classResource);
-        }
-        return classResource;
     }
 
     private void setDeviceSubclass(Resource classResource) {
