@@ -2,26 +2,19 @@ package tools;
 
 import cartago.*;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
 public class LampArtifact extends SemanticArtifact {
 
 	/*PROPERTIES*/
 	private boolean on;
-	private final String statePropertyName = "state";
-
-	/*EVENTS*/
-	private final String isOnEvent = "is_on";
-	private final String isOffEvent = "is_off";
+	private final String statePropertyName = "stateOn";
 
 
 	public void init(String id, boolean isOn) {
-		super.init(this.getClass().getSimpleName(), id);
+		super.init(this, id);
 		this.on = isOn;
 		defineObsProperty(statePropertyName, this.on); //define a new property that can be observed by agents
-
-		super.availableOperations(this);
+		
+		log("\n \n MODEL \n" + printModel());
 	}
 
 	@OPERATION void switchOn() {
@@ -37,8 +30,11 @@ public class LampArtifact extends SemanticArtifact {
 		ObsProperty state = getObsProperty(statePropertyName);	//get the object modelling the observable property "state"
 		state.updateValue(this.on);
 		if(this.on){
+			/*EVENTS*/
+			String isOnEvent = "is_on";
 			signal(isOnEvent);
 		} else {
+			String isOffEvent = "is_off";
 			signal(isOffEvent);
 		}
 	}

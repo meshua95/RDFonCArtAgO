@@ -1,6 +1,5 @@
 package it.unibo.tesi;
 
-import cartago.*;
 import it.unibo.tesi.ttlData.RDFUtils;
 
 import java.util.List;

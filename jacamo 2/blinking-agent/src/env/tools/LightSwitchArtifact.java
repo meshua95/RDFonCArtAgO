@@ -4,15 +4,9 @@ import cartago.*;
 
 public class LightSwitchArtifact extends SemanticArtifact {
 
-    SemanticEnvironment environment;
-
     /*PROPERTIES*/
     private final String pressPropertyName = "press";
     private boolean press;
-
-    /*EVENTS*/
-    private final String isPressedEvent = "is_pressed";
-    private final String isReleasedEvent = "is_released";
 
     void init(String id, boolean isPressed){
         super.init(this.getClass().getSimpleName(), id);
@@ -22,23 +16,31 @@ public class LightSwitchArtifact extends SemanticArtifact {
         defineObsProperty(pressPropertyName, this.press);
         log("created");
 
-        super.availableOperations(this);
+        super.setAvailableOperations(this);
     }
 
     @OPERATION
     void press() {
-        ObsProperty prop = getObsProperty(pressPropertyName);
-        this.press = true;
-        prop.updateValue(this.press);
-        signal(isPressedEvent);
+        setPress(true);
     }
 
     @OPERATION
     void release(){
+        setPress(false);
+    }
+
+    private void setPress(boolean p){
         ObsProperty prop = getObsProperty(pressPropertyName);
-        this.press = false;
+        this.press = p;
         prop.updateValue(this.press);
-        signal(isReleasedEvent);
+        if(p){
+            String isPressedEvent = "is_pressed";
+            signal(isPressedEvent);
+        } else {
+            String isReleasedEvent = "is_released";
+            signal(isReleasedEvent);
+        }
+
     }
 
 }

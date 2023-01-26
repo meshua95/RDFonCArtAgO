@@ -24,9 +24,6 @@ repositories {
     maven { url "https://raw.githubusercontent.com/jacamo-lang/mvn-repo/master" }
     maven { url "https://repo.gradle.org/gradle/libs-releases" }
 
-    //maven { url "http://jacamo.sourceforge.net/maven2" }
-    //maven { url "https://jade.tilab.com/maven/" }
-
     flatDir { dirs 'lib' }
 }
 
@@ -37,6 +34,8 @@ dependencies {
     implementation('org.apache.jena:apache-jena-libs:4.5.0')
     implementation ('org.slf4j:slf4j-simple:1.7.9')
     implementation('org.apache.jena:jena-arq:4.4.0')
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
 }
 
 sourceSets {
