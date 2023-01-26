@@ -1,9 +1,12 @@
 package tools;
 
 import cartago.Artifact;
+import com.fasterxml.jackson.databind.util.Annotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class SemanticArtifact extends Artifact {
 
@@ -17,6 +20,7 @@ public abstract class SemanticArtifact extends Artifact {
         this.artifactId = artifactId;
         environment.createResource(artifactClass);
         setAvailableOperations(className);
+        environment.addSignaledEvent("is_on", artifactId, artifactClass);
     }
 
     protected cartago.ObsProperty defineObsProperty(String name, Object... values ){
@@ -30,23 +34,21 @@ public abstract class SemanticArtifact extends Artifact {
     }
 
     protected void signal(String type, Object... objs){
-       // environment.addSignaledEvent(type, artifactId);
+        environment.addSignaledEvent(type, artifactId, artifactClass);
         super.signal(type, objs);
 
     }
 
     protected void setAvailableOperations(Object objectDefinition){
-        Method[] methods = objectDefinition.getClass().getDeclaredMethods();
-        for (Method method : methods) {
-            Annotation[] annotations = method.getAnnotations();
+        List<Method> methods = Arrays.asList(objectDefinition.getClass().getDeclaredMethods());
+        methods.forEach(m -> {
+            Annotation[] annotations = m.getAnnotations();
             for(Annotation ann: annotations){
                 if(ann.annotationType().getSimpleName().equals("OPERATION")){
-                    environment.addOperation(method.getName(), artifactClass);
-
+                    environment.addOperation(m.getName(), artifactClass);
                 }
             }
-        }
-
+        });
     }
 
     public String printModel(){

@@ -2,6 +2,9 @@ package tools;
 
 import org.apache.jena.rdf.model.*;
 
+import java.util.Date;
+import java.util.List;
+
 public class SemanticEnvironment {
 
     public static final String owlNamespace = "http://www.w3.org/2002/07/owl#";
@@ -143,7 +146,6 @@ public class SemanticEnvironment {
         return output;
     }
 
-
     /*
     1 - crea la risorsa evento es: is_on
     2 - prende la risorsa associata relativa all' istanza della classe
@@ -151,25 +153,36 @@ public class SemanticEnvironment {
     5 - prende la data
     6 - aggiunge la proprietà timestamp all'evento
      */
- /*   public void addSignaledEvent(String eventName, String resourceId){
-        Resource event = model.createResource(eventName);
+    public void addSignaledEvent(String eventName, String resourceId, String artifactClass){
+        Resource event = model.getResource(eventName);
+        if(!model.containsResource(event)){
+            event = model.createResource(eventName);
+            setDomain(event, this.event);
+            setDomain(event, model.getResource(artifactClass));
+            setDataType(event);
+            setRange(event, Date.class.getSimpleName());
+        }
+
         Resource resourceInstance = model.getResource(resourceId);
-        //todo: se c'è già un evento associato alla risorsa si elimina e si aggiunge questo
-        //evento appartiene al dominio classResource
-        //setDomain(event, resourceInstance);
-        Property prop = model.createProperty("", "timestamp");
-        Date d = new Date();
-        model.add(model.createStatement(event, prop, "" + d.getTime()));
-        //evento timestamp valore
+        removePrevEvent(resourceInstance);
+        Property prop = model.createProperty(eventName);
+        Date timestamp = new Date();
+        model.add(model.createStatement(resourceInstance, prop, timestamp.toString()));
     }
 
-    private void removeEvent(String eventName, String resourceName){
-        Resource event = model.createResource(eventName);
-        Property domainProperty = model.createProperty(rdfSchemaNamespace, "domain");
-        Resource classResource = model.getResource(resourceName);
-        model.remove(model.createStatement(event, domainProperty, classResource));
-    }
+    private void removePrevEvent(Resource resInstance){
+        Selector selector = new SimpleSelector(null, null, this.event);
+        List<Statement> stmtIter = model.listStatements(selector).toList();
+        for (Statement s: stmtIter){
+            Property prop = model.createProperty(s.getSubject().getNameSpace(), s.getSubject().getLocalName());
 
-*/
+            Selector sel = new SimpleSelector(resInstance, prop, (RDFNode) null);
+            StmtIterator iter = model.listStatements(sel);
+            while (iter.hasNext()){
+                Statement st = iter.nextStatement();
+                model.remove(st);
+            }
+        }
+    }
 
 }
