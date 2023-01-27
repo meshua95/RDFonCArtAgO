@@ -172,17 +172,62 @@ public class SemanticEnvironment {
 
     private void removePrevEvent(Resource resInstance){
         Selector selector = new SimpleSelector(null, null, this.event);
-        List<Statement> stmtIter = model.listStatements(selector).toList();
-        for (Statement s: stmtIter){
+        List<Statement> stmtIterator = model.listStatements(selector).toList();
+        for (Statement s: stmtIterator){
             Property prop = model.createProperty(s.getSubject().getNameSpace(), s.getSubject().getLocalName());
 
-            Selector sel = new SimpleSelector(resInstance, prop, (RDFNode) null);
-            StmtIterator iter = model.listStatements(sel);
-            while (iter.hasNext()){
-                Statement st = iter.nextStatement();
-                model.remove(st);
+            selector = new SimpleSelector(resInstance, prop, (RDFNode) null);
+            List<Statement> instanceStatement = model.listStatements(selector).toList();
+            for(Statement stmt: instanceStatement){
+                model.remove(stmt);
             }
         }
     }
 
+    public void addObjectProperty(String name, String refId, String artifactId, String artifactClass) {
+        Resource objProperty = model.getResource(name);
+        if(!model.containsResource(objProperty)){
+            objProperty = model.createResource(name);
+            setRange(objProperty, device.toString());
+            Resource classArt = model.getResource(artifactClass);
+            setDomain(objProperty, classArt);
+            setObjecProperty(objProperty);
+        }
+
+        if(checkCanRelate(refId )){
+            Resource firstInstance = model.getResource(artifactId);
+            Resource secondInstance = model.getResource(refId);
+            Property prop = model.getProperty(name);
+            model.add(model.createStatement(firstInstance, prop, secondInstance));
+        }
+    }
+
+    private boolean checkCanRelate(String refId){
+        Resource idResource = model.createResource(refId);
+        Property type = model.createProperty(rdfSyntaxNamespace, "type");
+        Selector selector = new SimpleSelector(idResource, type, (RDFNode) null);
+        List<Statement> stmtIterator = model.listStatements(selector).toList();
+        Statement namedIndividualStatement = model.createStatement(idResource, type, model.createResource(owlNamespace + "NamedIndividual"));
+        if(!stmtIterator.contains(namedIndividualStatement)){
+            return false;
+        } else {
+            stmtIterator.removeIf(s -> s.equals(namedIndividualStatement));
+        }
+        Property subClassProperty = model.createProperty(rdfSchemaNamespace, "subClassOf");
+        for (Statement s: stmtIterator){
+            Resource artifactClass = (Resource) s.getObject();
+            selector = new SimpleSelector(artifactClass, subClassProperty, device);
+            List<Statement> item = model.listStatements(selector).toList();
+            if(!item.isEmpty()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void setObjecProperty(Resource propName){
+        Property typeProperty = model.getProperty(rdfSyntaxNamespace, "type");
+        Resource typeResource = model.createResource(owlNamespace + "ObjectProperty");
+        model.add(model.createStatement(propName, typeProperty, typeResource));
+    }
 }

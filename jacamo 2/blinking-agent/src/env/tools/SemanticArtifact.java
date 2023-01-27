@@ -28,9 +28,10 @@ public abstract class SemanticArtifact extends Artifact {
         return super.defineObsProperty(name, values);
     }
 
-    protected cartago.ObsProperty defineRelationship(String name, Object... values){
+    protected cartago.ObsProperty defineRelationship(String name, String refId){
         //todo qua devi gestire l'inserimento di una relazione nell'RDF
-        return super.defineObsProperty(name, values);
+        environment.addObjectProperty(name, refId, artifactId, artifactClass);
+        return super.defineObsProperty(name, refId);
     }
 
     protected void signal(String type, Object... objs){
