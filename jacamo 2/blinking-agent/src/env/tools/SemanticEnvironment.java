@@ -41,6 +41,16 @@ public class SemanticEnvironment {
         }
     }
 
+    public void createInstance(String artifactId, String artifactClass) {
+        Resource resourceName = model.createResource(artifactId);
+        Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
+        Resource artifactResource = model.getResource(artifactClass);
+        model.add(model.createStatement(resourceName, typeProperty, artifactResource));
+
+        Resource instanceDefinition = model.createProperty(owlNamespace, "NamedIndividual");
+        model.add(model.createStatement(resourceName, typeProperty, instanceDefinition));
+    }
+
     /**
      * aggiunge una proprietà ad un oggetto di una classe
      *
@@ -65,24 +75,62 @@ public class SemanticEnvironment {
         setDataType(operation);
     }
 
-    private void addDataPropertyValue(Resource resourceInstance, String propertyName, Object propertyValue){
-        Resource propName = model.createResource(propertyName);
-        Property property = model.getProperty(propName.getNameSpace(), propName.getLocalName());
-        Literal value = model.createLiteral(String.valueOf(propertyValue), xmlSchemaNamespace);
-        model.add(model.createStatement(resourceInstance, property, value));
+
+    public void addObjectProperty(String name, String refId, String artifactId, String artifactClass) {
+        Resource objProperty = model.getResource(name);
+        if(!model.containsResource(objProperty)){
+            objProperty = model.createResource(name);
+            setRange(objProperty, device.toString());
+            Resource classArt = model.getResource(artifactClass);
+            setDomain(objProperty, classArt);
+            setObjecProperty(objProperty);
+        }
+
+        if(checkCanRelate(refId )){
+            Resource firstInstance = model.getResource(artifactId);
+            Resource secondInstance = model.getResource(refId);
+            Property prop = model.getProperty(name);
+            model.add(model.createStatement(firstInstance, prop, secondInstance));
+        }
     }
 
-    private void addDataProperty(Resource classResource, String propertyName, String propertyType) {
-        Resource propName = model.createResource(propertyName);
-        setRange(propName, propertyType);
-        setDomain(propName, classResource);
-        setDataType(propName);
+    public String printAllStatement(){
+        String output = "Gli statement sono: \n";
+        StmtIterator iterator = model.listStatements();
+
+        while(iterator.hasNext()){
+            Statement elem = iterator.next();
+            output = output.concat(elem.getSubject() + " "
+                    + elem.getPredicate() + " "
+                    + elem.getObject() + "\n");
+        }
+        return output;
     }
 
-    private void setDeviceSubclass(Resource classResource) {
-        Property subClassProperty = model.createProperty(rdfSchemaNamespace, "subClassOf");
-        model.add(model.createStatement(classResource, subClassProperty, device));
+    /*
+    1 - crea la risorsa evento es: is_on
+    2 - prende la risorsa associata relativa all' istanza della classe
+    4 - crea la proprietà timestamp
+    5 - prende la data
+    6 - aggiunge la proprietà timestamp all'evento
+     */
+    public void addSignaledEvent(String eventName, String resourceId, String artifactClass){
+        Resource event = model.getResource(eventName);
+        if(!model.containsResource(event)){
+            event = model.createResource(eventName);
+            setDomain(event, this.event);
+            setDomain(event, model.getResource(artifactClass));
+            setDataType(event);
+            setRange(event, Date.class.getSimpleName());
+        }
+
+        Resource resourceInstance = model.getResource(resourceId);
+        removePrevEvent(resourceInstance);
+        Property prop = model.createProperty(eventName);
+        Date timestamp = new Date();
+        model.add(model.createStatement(resourceInstance, prop, timestamp.toString()));
     }
+
 
     /**
      * restituisce un'istanza della risorsa dichiarata owl:Class. Se non esiste la crea
@@ -133,43 +181,6 @@ public class SemanticEnvironment {
         model.add(model.createStatement(propName, typeProperty, typeResource));
     }
 
-    public String printAllStatement(){
-        String output = "Gli statement sono: \n";
-        StmtIterator iterator = model.listStatements();
-
-        while(iterator.hasNext()){
-            Statement elem = iterator.next();
-            output = output + elem.getSubject() + " "
-                        + elem.getPredicate() + " "
-                        + elem.getObject() + "\n";
-        }
-        return output;
-    }
-
-    /*
-    1 - crea la risorsa evento es: is_on
-    2 - prende la risorsa associata relativa all' istanza della classe
-    4 - crea la proprietà timestamp
-    5 - prende la data
-    6 - aggiunge la proprietà timestamp all'evento
-     */
-    public void addSignaledEvent(String eventName, String resourceId, String artifactClass){
-        Resource event = model.getResource(eventName);
-        if(!model.containsResource(event)){
-            event = model.createResource(eventName);
-            setDomain(event, this.event);
-            setDomain(event, model.getResource(artifactClass));
-            setDataType(event);
-            setRange(event, Date.class.getSimpleName());
-        }
-
-        Resource resourceInstance = model.getResource(resourceId);
-        removePrevEvent(resourceInstance);
-        Property prop = model.createProperty(eventName);
-        Date timestamp = new Date();
-        model.add(model.createStatement(resourceInstance, prop, timestamp.toString()));
-    }
-
     private void removePrevEvent(Resource resInstance){
         Selector selector = new SimpleSelector(null, null, this.event);
         List<Statement> stmtIterator = model.listStatements(selector).toList();
@@ -181,24 +192,6 @@ public class SemanticEnvironment {
             for(Statement stmt: instanceStatement){
                 model.remove(stmt);
             }
-        }
-    }
-
-    public void addObjectProperty(String name, String refId, String artifactId, String artifactClass) {
-        Resource objProperty = model.getResource(name);
-        if(!model.containsResource(objProperty)){
-            objProperty = model.createResource(name);
-            setRange(objProperty, device.toString());
-            Resource classArt = model.getResource(artifactClass);
-            setDomain(objProperty, classArt);
-            setObjecProperty(objProperty);
-        }
-
-        if(checkCanRelate(refId )){
-            Resource firstInstance = model.getResource(artifactId);
-            Resource secondInstance = model.getResource(refId);
-            Property prop = model.getProperty(name);
-            model.add(model.createStatement(firstInstance, prop, secondInstance));
         }
     }
 
@@ -230,4 +223,24 @@ public class SemanticEnvironment {
         Resource typeResource = model.createResource(owlNamespace + "ObjectProperty");
         model.add(model.createStatement(propName, typeProperty, typeResource));
     }
+
+    private void addDataPropertyValue(Resource resourceInstance, String propertyName, Object propertyValue){
+        Resource propName = model.createResource(propertyName);
+        Property property = model.getProperty(propName.getNameSpace(), propName.getLocalName());
+        Literal value = model.createLiteral(String.valueOf(propertyValue), xmlSchemaNamespace);
+        model.add(model.createStatement(resourceInstance, property, value));
+    }
+
+    private void addDataProperty(Resource classResource, String propertyName, String propertyType) {
+        Resource propName = model.createResource(propertyName);
+        setRange(propName, propertyType);
+        setDomain(propName, classResource);
+        setDataType(propName);
+    }
+
+    private void setDeviceSubclass(Resource classResource) {
+        Property subClassProperty = model.createProperty(rdfSchemaNamespace, "subClassOf");
+        model.add(model.createStatement(classResource, subClassProperty, device));
+    }
+
 }

@@ -1,7 +1,6 @@
 package tools;
 
 import cartago.Artifact;
-import com.fasterxml.jackson.databind.util.Annotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -19,17 +18,18 @@ public abstract class SemanticArtifact extends Artifact {
         this.artifactClass = className.getClass().getSimpleName();
         this.artifactId = artifactId;
         environment.createResource(artifactClass);
+        environment.createInstance(artifactId, artifactClass);
         setAvailableOperations(className);
         environment.addSignaledEvent("is_on", artifactId, artifactClass);
+        environment.addSignaledEvent("is_off", artifactId, artifactClass);
     }
 
-    protected cartago.ObsProperty defineObsProperty(String name, Object... values ){
-        environment.defineDataProperty(artifactClass, artifactId, name, values);
-        return super.defineObsProperty(name, values);
+    protected cartago.ObsProperty defineObsProperty(String name, Object value ){
+        environment.defineDataProperty(artifactClass, artifactId, name, value);
+        return super.defineObsProperty(name, value);
     }
 
     protected cartago.ObsProperty defineRelationship(String name, String refId){
-        //todo qua devi gestire l'inserimento di una relazione nell'RDF
         environment.addObjectProperty(name, refId, artifactId, artifactClass);
         return super.defineObsProperty(name, refId);
     }
@@ -52,8 +52,8 @@ public abstract class SemanticArtifact extends Artifact {
         });
     }
 
-    public String printModel(){
-        return environment.printAllStatement();
+    public void printModel(){
+        log(environment.printAllStatement());
     }
 
 }

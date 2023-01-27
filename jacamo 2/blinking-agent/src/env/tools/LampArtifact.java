@@ -13,8 +13,6 @@ public class LampArtifact extends SemanticArtifact {
 		super.init(this, id);
 		this.on = isOn;
 		defineObsProperty(statePropertyName, this.on); //define a new property that can be observed by agents
-
-		log("\n \n MODEL \n" + printModel());
 	}
 
 	@OPERATION void switchOn() {

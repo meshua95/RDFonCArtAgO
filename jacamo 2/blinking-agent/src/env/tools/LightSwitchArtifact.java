@@ -5,18 +5,21 @@ import cartago.*;
 public class LightSwitchArtifact extends SemanticArtifact {
 
     /*PROPERTIES*/
-    private final String pressPropertyName = "press";
+    private final String pressPropertyName = "statePressed";
     private boolean press;
 
-    void init(String id, boolean isPressed){
-        super.init(this.getClass().getSimpleName(), id);
+    void init(String id, boolean isPressed, String idConnection){
+        super.init(this, id);
 
         log("creating...");
         this.press = isPressed;
         defineObsProperty(pressPropertyName, this.press);
+        defineRelationship("connectedTo", idConnection);
         log("created");
 
         super.setAvailableOperations(this);
+
+        printModel();
     }
 
     @OPERATION

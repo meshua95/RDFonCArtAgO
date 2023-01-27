@@ -13,9 +13,12 @@
     /* Proactive plans. */
     +!start 
         <- .println("CreateLamp...");
-           ?isOn(InitialState);
-           makeArtifact(lampId_0, "tools.LampArtifact", [lampId_0, InitialState], LampRef);
-           .println("Create Lightswitch...").
+           ?isOn(InitialLampState);
+           makeArtifact(lampId_0, "tools.LampArtifact", [lampId_0, InitialLampState], LampRef);
+           .println("Create Lightswitch...");
+           ?isPressed(InitialLSState);
+           makeArtifact(lsId_0, "tools.LightSwitchArtifact", [lsId_0, InitialLSState, lampId_0]);
+           .println("Created all").
 
 
 /* ############### */
