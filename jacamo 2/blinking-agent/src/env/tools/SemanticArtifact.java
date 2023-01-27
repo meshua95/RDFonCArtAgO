@@ -20,8 +20,6 @@ public abstract class SemanticArtifact extends Artifact {
         environment.createResource(artifactClass);
         environment.createInstance(artifactId, artifactClass);
         setAvailableOperations(className);
-        environment.addSignaledEvent("is_on", artifactId, artifactClass);
-        environment.addSignaledEvent("is_off", artifactId, artifactClass);
     }
 
     protected cartago.ObsProperty defineObsProperty(String name, Object value ){
