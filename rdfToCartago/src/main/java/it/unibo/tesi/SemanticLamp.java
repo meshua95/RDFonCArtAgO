@@ -1,5 +1,8 @@
 package it.unibo.tesi;
 
+import cartago.Artifact;
+import cartago.OPERATION;
+import cartago.ObsProperty;
 import it.unibo.tesi.ttlData.RDFUtils;
 
 import java.util.List;
