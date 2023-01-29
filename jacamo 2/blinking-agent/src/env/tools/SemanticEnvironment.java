@@ -1,16 +1,16 @@
 package tools;
 
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFWriter;
+import org.apache.jena.riot.RIOT;
 
 import java.util.Date;
 import java.util.List;
 
 public class SemanticEnvironment {
 
-    public static final String owlNamespace = "http://www.w3.org/2002/07/owl#";
-    public static final String rdfSchemaNamespace = "http://www.w3.org/2000/01/rdf-schema#";
-    public static final String rdfSyntaxNamespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-    public static final String xmlSchemaNamespace =  "http://www.w3.org/2001/XMLSchema#";
+    public static final String
 
     private final Resource command;
     private final Resource device;
@@ -43,11 +43,11 @@ public class SemanticEnvironment {
 
     public void createInstance(String artifactId, String artifactClass) {
         Resource resourceName = model.createResource(artifactId);
-        Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
+        Property typeProperty = model.createProperty( "type");
         Resource artifactResource = model.getResource(artifactClass);
         model.add(model.createStatement(resourceName, typeProperty, artifactResource));
 
-        Resource instanceDefinition = model.createProperty(owlNamespace, "NamedIndividual");
+        Resource instanceDefinition = model.createProperty( "NamedIndividual");
         model.add(model.createStatement(resourceName, typeProperty, instanceDefinition));
     }
 
@@ -94,17 +94,14 @@ public class SemanticEnvironment {
         }
     }
 
-    public String printAllStatement(){
-        String output = "Gli statement sono: \n";
-        StmtIterator iterator = model.listStatements();
+    public Model getModel(){
+        return this.model;
+    }
 
-        while(iterator.hasNext()){
-            Statement elem = iterator.next();
-            output = output.concat(elem.getSubject() + " "
-                    + elem.getPredicate() + " "
-                    + elem.getObject() + "\n");
-        }
-        return output;
+    public void printAllStatement(){
+        RDFWriter.source(model)
+                .set(RIOT.symTurtleDirectiveStyle, "sparql")
+                .lang(Lang.TTL).output("SemanticEnvironment.ttl");
     }
 
     /*
@@ -141,8 +138,8 @@ public class SemanticEnvironment {
         Resource resInstance = model.getResource(resId);
         if (resInstance.isAnon()) {
             resInstance = model.createResource(resId);
-            Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
-            Resource owlType = model.createResource(owlNamespace + "NamedIndividual");
+            Property typeProperty = model.createProperty("type");
+            Resource owlType = model.createResource("NamedIndividual");
             model.add(model.createStatement(resInstance, typeProperty, classRes));
             model.add(model.createStatement(resInstance, typeProperty, owlType));
         }
@@ -157,27 +154,27 @@ public class SemanticEnvironment {
      */
     private Resource addOwlObject(String name){
         Resource resourceName = model.createResource(name);
-        Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
-        Resource classResource = model.createProperty(owlNamespace, "Class");
+        Property typeProperty = model.createProperty("type");
+        Resource classResource = model.createProperty("Class");
 
         model.add(model.createStatement(resourceName, typeProperty, classResource));
         return resourceName;
     }
 
     private void setRange(Resource propName, String typeProperty){
-        Property rangeProperty = model.getProperty(rdfSchemaNamespace, "range");
-        Resource typePropertyValue = model.createResource(xmlSchemaNamespace + typeProperty);
+        Property rangeProperty = model.getProperty("range");
+        Resource typePropertyValue = model.createResource(typeProperty);
         model.add(model.createStatement(propName, rangeProperty, typePropertyValue));
     }
 
     private void setDomain(Resource propName, Resource classResource) {
-        Property domainProperty = model.createProperty(rdfSchemaNamespace, "domain");
+        Property domainProperty = model.createProperty("domain");
         model.add(model.createStatement(propName, domainProperty, classResource));
     }
 
     private void setDataType(Resource propName){
-        Property typeProperty = model.getProperty(rdfSyntaxNamespace, "type");
-        Resource typeResource = model.createResource(owlNamespace + "DatatypeProperty");
+        Property typeProperty = model.getProperty("type");
+        Resource typeResource = model.createResource("DatatypeProperty");
         model.add(model.createStatement(propName, typeProperty, typeResource));
     }
 
@@ -197,16 +194,16 @@ public class SemanticEnvironment {
 
     private boolean checkCanRelate(String refId){
         Resource idResource = model.createResource(refId);
-        Property type = model.createProperty(rdfSyntaxNamespace, "type");
+        Property type = model.createProperty("type");
         Selector selector = new SimpleSelector(idResource, type, (RDFNode) null);
         List<Statement> stmtIterator = model.listStatements(selector).toList();
-        Statement namedIndividualStatement = model.createStatement(idResource, type, model.createResource(owlNamespace + "NamedIndividual"));
+        Statement namedIndividualStatement = model.createStatement(idResource, type, model.createResource("NamedIndividual"));
         if(!stmtIterator.contains(namedIndividualStatement)){
             return false;
         } else {
             stmtIterator.removeIf(s -> s.equals(namedIndividualStatement));
         }
-        Property subClassProperty = model.createProperty(rdfSchemaNamespace, "subClassOf");
+        Property subClassProperty = model.createProperty("subClassOf");
         for (Statement s: stmtIterator){
             Resource artifactClass = (Resource) s.getObject();
             selector = new SimpleSelector(artifactClass, subClassProperty, device);
@@ -219,15 +216,15 @@ public class SemanticEnvironment {
     }
 
     private void setObjecProperty(Resource propName){
-        Property typeProperty = model.getProperty(rdfSyntaxNamespace, "type");
-        Resource typeResource = model.createResource(owlNamespace + "ObjectProperty");
+        Property typeProperty = model.getProperty("type");
+        Resource typeResource = model.createResource("ObjectProperty");
         model.add(model.createStatement(propName, typeProperty, typeResource));
     }
 
     private void addDataPropertyValue(Resource resourceInstance, String propertyName, Object propertyValue){
         Resource propName = model.createResource(propertyName);
         Property property = model.getProperty(propName.getNameSpace(), propName.getLocalName());
-        Literal value = model.createLiteral(String.valueOf(propertyValue), xmlSchemaNamespace);
+        Literal value = model.createLiteral(String.valueOf(propertyValue));
         model.add(model.createStatement(resourceInstance, property, value));
     }
 
@@ -239,7 +236,7 @@ public class SemanticEnvironment {
     }
 
     private void setDeviceSubclass(Resource classResource) {
-        Property subClassProperty = model.createProperty(rdfSchemaNamespace, "subClassOf");
+        Property subClassProperty = model.createProperty("subClassOf");
         model.add(model.createStatement(classResource, subClassProperty, device));
     }
 

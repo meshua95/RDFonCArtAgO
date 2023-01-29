@@ -35,7 +35,6 @@ public abstract class SemanticArtifact extends Artifact {
     protected void signal(String type, Object... objs){
         environment.addSignaledEvent(type, artifactId, artifactClass);
         super.signal(type, objs);
-
     }
 
     protected void setAvailableOperations(Object objectDefinition){
@@ -48,10 +47,6 @@ public abstract class SemanticArtifact extends Artifact {
                 }
             }
         });
-    }
-
-    public void printModel(){
-        log(environment.printAllStatement());
     }
 
 }

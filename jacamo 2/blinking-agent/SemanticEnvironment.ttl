@@ -1,0 +1,33 @@
+<press>  <domain>  <Command> , <LightSwitchArtifact> ;
+        <type>    <DatatypeProperty> .
+
+<switchOn>  <domain>  <Command> , <LampArtifact> ;
+        <type>    <DatatypeProperty> .
+
+<switchOff>  <domain>  <Command> , <LampArtifact> ;
+        <type>    <DatatypeProperty> .
+
+<lampId_0>  <stateOn>  "false" ;
+        <type>     <NamedIndividual> , <LampArtifact> .
+
+<LampArtifact>  <subClassOf>  <Device> ;
+        <type>        <Class> .
+
+<Event>  <type>  <Class> .
+
+<Command>  <type>  <Class> .
+
+<LightSwitchArtifact>
+        <subClassOf>  <Device> ;
+        <type>        <Class> .
+
+<release>  <domain>  <Command> , <LightSwitchArtifact> ;
+        <type>    <DatatypeProperty> .
+
+<Device>  <type>  <Class> .
+
+<lsId_0>  <type>  <NamedIndividual> , <LightSwitchArtifact> .
+
+<stateOn>  <domain>  <LampArtifact> ;
+        <range>   <Boolean> ;
+        <type>    <DatatypeProperty> .
