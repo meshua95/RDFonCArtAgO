@@ -2,53 +2,135 @@ package tools;
 
 import cartago.Artifact;
 import cartago.OPERATION;
+import cartago.OpFeedbackParam;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ServiceArtifact extends Artifact {
 
+    private static final String prefixesList = "PREFIX owl: <" + SemanticEnvironment.owlNamespace + ">"
+            + "PREFIX rdf: <" + SemanticEnvironment.rdfSyntaxNamespace + "> "
+            + "PREFIX rdfs: <" + SemanticEnvironment.rdfSchemaNamespace + "> "
+            + "PREFIX : <" + SemanticEnvironment.base + "> ";
+
     SemanticEnvironment environment;
-    String prefixQuery = "";
 
     public void init(){
         environment = SemanticEnvironment.getInstance();
     }
 
     @OPERATION
-    public void environmentQuery(){
-        environment.getModel().listStatements().toList().forEach(s -> log(s.toString()));
-        //String queryString = "SELECT ?class WHERE {?class ?p ?o . FILTER (substr(str(?p), (strlen(str(?p)) - 11)) = 'subClassOf')}";
-        //String queryString = "SELECT ?y WHERE {?y a ?x. FILTER regex(str(?x), 'Device$')}";
-        String queryString = "SELECT ?class WHERE {?class ?x ?y . FILTER regex(str(?x), 'subClassOf$') FILTER regex(str(?y), 'Device$') }";
-        //String queryString = "SELECT ?instance WHERE {?instance ?p ?o . FILTER regex(str(?p), 'type$') FILTER regex(str(?o), 'LampArtifact$') }";
-        /*String queryString = "SELECT ?instance " +
-                "WHERE {{ " +
-                "SELECT ?class WHERE {?class ?p ?o . FILTER regex(str(?p), 'subClassOf$') FILTER regex(str(?o), 'Device$') }} " +
-                "?instance a ?class }"; */
-//.FILTER EXISTS {?instance ?p ?o . FILTER regex(str(?p), 'type$') }
-        //String queryString = "SELECT ?x ?p ?o WHERE {?x ?p ?o . FILTER regex(str(?p), 'subClassOf$') FILTER regex(str(?o), 'Device$') } ";
+    public void genericQuery(String queryString,  OpFeedbackParam<QuerySolution[]> resultSet){ //
+
+        queryString = prefixesList.concat(queryString);
+
         Query query = QueryFactory.create(queryString);
 
+        // Execute the query and obtain results
         QueryExecution qe = QueryExecutionFactory.create(query, environment.getModel());
         ResultSet results = qe.execSelect();
 
-        while (results.hasNext()) {
-            QuerySolution result = results.next();
-            //log(ResultSetFormatter.asText(results));
-        }
+        // Output query results
+        log(ResultSetFormatter.asText(results));
 
-//        ResultSetFormatter.out(System.out, results, query));
-log("fine query");
+        // Important ‑ free up resources used running the query
         qe.close();
+
+        //todo imposta il resultSet
     }
 
     @OPERATION
-    public void artifactQuery(){
+    public void availableDevices(OpFeedbackParam<QuerySolution[]> resultSet){
+        String queryString = prefixesList +
+                "SELECT ?id " +
+                "WHERE {" +
+                "?subject rdfs:subClassOf :Device . " +
+                "?id rdf:type ?subject}";
 
+
+        Query query = QueryFactory.create(queryString);
+
+        // Execute the query and obtain results
+        QueryExecution qe = QueryExecutionFactory.create(query, environment.getModel());
+        ResultSet results = qe.execSelect();
+
+        // Output query results
+        log(ResultSetFormatter.asText(results));
+
+        // Important ‑ free up resources used running the query
+        qe.close();
+
+        //todo imposta il resultSet
+    }
+
+    @OPERATION
+    public void specificDeviceInstance(String deviceType, OpFeedbackParam<QuerySolution[]> resultSet){
+        String queryString = prefixesList +
+                "SELECT ?id " +
+                "WHERE {" +
+                "?id rdf:type :"+ deviceType + "}";
+
+
+        Query query = QueryFactory.create(queryString);
+
+        // Execute the query and obtain results
+        QueryExecution qe = QueryExecutionFactory.create(query, environment.getModel());
+        ResultSet results = qe.execSelect();
+
+        // Output query results
+        log(ResultSetFormatter.asText(results));
+
+        // Important ‑ free up resources used running the query
+        qe.close();
+
+        //todo imposta il resultSet
+    }
+
+    @OPERATION
+    public void allRelationsQuery(OpFeedbackParam<QuerySolution[]> resultSet){
+        String queryString = prefixesList +
+                "SELECT ?first ?second " +
+                "WHERE {?first :connectedTo ?second . }";
+
+        Query query = QueryFactory.create(queryString);
+
+        // Execute the query and obtain results
+        QueryExecution qe = QueryExecutionFactory.create(query, environment.getModel());
+        ResultSet results = qe.execSelect();
+
+        // Output query results
+        log(ResultSetFormatter.asText(results));
+
+        // Important ‑ free up resources used running the query
+        qe.close();
+
+        //todo imposta il resultSet
+    }
+
+    @OPERATION
+    public void deviceRelationQuery(String deviceId, OpFeedbackParam<QuerySolution[]> resultSet){
+        String queryString = prefixesList +
+                "SELECT ?device " +
+                "WHERE {:" + deviceId + " :connectedTo ?device . }";
+
+        Query query = QueryFactory.create(queryString);
+
+        // Execute the query and obtain results
+        QueryExecution qe = QueryExecutionFactory.create(query, environment.getModel());
+        ResultSet results = qe.execSelect();
+
+        // Output query results
+        log(ResultSetFormatter.asText(results));
+
+        // Important ‑ free up resources used running the query
+        qe.close();
+
+        //todo imposta il resultSet
     }
 }

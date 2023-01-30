@@ -20,7 +20,7 @@
            makeArtifact(lsId_0, "tools.LightSwitchArtifact", [lsId_0, InitialLSState, lampId_0], LSRef);
            .println("Created all");
            makeArtifact(service, "tools.ServiceArtifact", [], ServiceRes);
-           environmentQuery.
+           deviceRelationQuery("lsId_0", Result).
 
 
 /* ############### */
