@@ -43,9 +43,6 @@ sourceSets {
         java {
             srcDir 'src/env'
             srcDir 'src/agt'
-            srcDir 'src/org'
-            srcDir 'src/int'
-            srcDir 'src/java'
         }
         resources {
             srcDir 'src/resources'
