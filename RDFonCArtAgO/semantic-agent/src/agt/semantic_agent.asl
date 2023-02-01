@@ -20,8 +20,12 @@
            makeArtifact(lsId_0, "tools.LightSwitchArtifact", [lsId_0, InitialLSState, lampId_0], LSRef);
            .println("Created all");
            makeArtifact(service, "tools.ServiceArtifact", [], ServiceRes);
-           deviceRelationQuery("lsId_0", Result).
-
+           query("SELECT ?id WHERE {?subject rdfs:subClassOf :Device . ?id rdf:type ?subject}", ResultSet);
+           getAtIndex(1, ResultSet, Element);
+           getValue("id", Element, Value);
+           println(Value);
+           lookupArtifact(Value, IdArtifact);
+           switchOn [artifact_id(IdArtifact)].
 
 /* ############### */
 

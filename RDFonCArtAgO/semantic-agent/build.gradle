@@ -61,7 +61,6 @@ task run (type: JavaExec, dependsOn: 'classes') {
     }
     main 'jacamo.infra.JaCaMoLauncher'
     args 'multi-agent-system.jcm'
-    // jvmArgs '-Xss15m'
     classpath sourceSets.main.runtimeClasspath
 }
 

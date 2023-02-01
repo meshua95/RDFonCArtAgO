@@ -1,5 +1,5 @@
 /*
-    blinking-multi-agent-system
+    semantic-multi-agent-system
     ---------------------------
 
     JaCaMo Application File
@@ -13,10 +13,10 @@
 */
 
 /* Multi-Agent system */
-mas blinking_multi_agent_system {
+mas semantic_multi_agent_system {
 
     /* Agents contained in this MAS... */
-    agent blinking_agent
+    agent semantic_agent
     // add new agents here...
 
 }

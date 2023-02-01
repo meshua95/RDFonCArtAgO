@@ -4,7 +4,6 @@ import cartago.*;
 
 public class LightSwitchArtifact extends SemanticArtifact {
 
-    /*PROPERTIES*/
     private final String pressPropertyName = "statePressed";
     private boolean press;
 

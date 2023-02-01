@@ -8,7 +8,6 @@ public class LampArtifact extends SemanticArtifact {
 	private boolean on;
 	private final String statePropertyName = "stateOn";
 
-
 	public void init(String id, boolean isOn) {
 		super.init(this, id);
 		this.on = isOn;
@@ -28,7 +27,6 @@ public class LampArtifact extends SemanticArtifact {
 		ObsProperty state = getObsProperty(statePropertyName);	//get the object modelling the observable property "state"
 		state.updateValue(this.on);
 		if(this.on){
-			/*EVENTS*/
 			String isOnEvent = "is_on";
 			signal(isOnEvent);
 		} else {
