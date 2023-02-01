@@ -15,6 +15,10 @@ public class LightSwitchArtifact extends SemanticArtifact {
         defineRelationship("connectedTo", idConnection);
     }
 
+    @OPERATION void lightSwitchState(OpFeedbackParam<Boolean> state) {
+        state.set(this.press);
+    }
+
     @OPERATION
     void press() {
         setPress(true);

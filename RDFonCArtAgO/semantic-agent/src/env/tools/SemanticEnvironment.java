@@ -78,7 +78,7 @@ public class SemanticEnvironment {
         setDomain(operation, command);
         setDataType(operation);
     }
-    
+
     public void addObjectProperty(String name, String refId, String artifactId, String artifactClass) {
         Resource objProperty = model.getResource(base + name);
         if(!model.containsResource(objProperty)){

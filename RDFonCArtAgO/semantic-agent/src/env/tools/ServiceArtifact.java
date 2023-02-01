@@ -22,8 +22,7 @@ public class ServiceArtifact extends Artifact {
     }
 
     @OPERATION
-    public void query(String queryString, OpFeedbackParam<List<QuerySolution>> resultSet){ //
-
+    public void query(String queryString, OpFeedbackParam<List<QuerySolution>> resultSet){
         queryString = prefixesList.concat(queryString);
         Query query = QueryFactory.create(queryString);
         QueryExecution qe = QueryExecutionFactory.create(query, environment.getModel());
@@ -40,13 +39,10 @@ public class ServiceArtifact extends Artifact {
     @OPERATION
     public void getAtIndex(int index, List<QuerySolution> res, OpFeedbackParam<QuerySolution> elem){
         if(res.size() > index){
-            log("ho settato l'index");
             elem.set(res.get(index));
         } else {
-            log("ho settato a null");
             elem.set(null);
         }
-
     }
 
     @OPERATION

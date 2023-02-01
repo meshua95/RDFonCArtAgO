@@ -14,6 +14,10 @@ public class LampArtifact extends SemanticArtifact {
 		defineObsProperty(statePropertyName, this.on); //define a new property that can be observed by agents
 	}
 
+	@OPERATION void lampState(OpFeedbackParam<Boolean> state) {
+		state.set(this.on);
+	}
+
 	@OPERATION void switchOn() {
 		this.switchTo(true);
 	}
