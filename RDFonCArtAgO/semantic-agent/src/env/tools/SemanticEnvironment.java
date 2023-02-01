@@ -78,8 +78,7 @@ public class SemanticEnvironment {
         setDomain(operation, command);
         setDataType(operation);
     }
-
-
+    
     public void addObjectProperty(String name, String refId, String artifactId, String artifactClass) {
         Resource objProperty = model.getResource(base + name);
         if(!model.containsResource(objProperty)){
@@ -100,12 +99,6 @@ public class SemanticEnvironment {
 
     public Model getModel(){
         return this.model;
-    }
-
-    public void printAllStatement(){
-        RDFWriter.source(model)
-                .set(RIOT.symTurtleDirectiveStyle, "sparql")
-                .lang(Lang.TTL).output("SemanticEnvironment.ttl");
     }
 
     /*
@@ -132,6 +125,11 @@ public class SemanticEnvironment {
         model.add(model.createStatement(resourceInstance, prop, timestamp.toString()));
     }
 
+    public void printAllStatement(){
+        RDFWriter.source(model)
+                .set(RIOT.symTurtleDirectiveStyle, "sparql")
+                .lang(Lang.TTL).output("SemanticEnvironment.ttl");
+    }
 
     /**
      * restituisce un'istanza della risorsa dichiarata owl:Class. Se non esiste la crea
