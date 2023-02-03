@@ -37,7 +37,7 @@ public abstract class SemanticArtifact extends Artifact {
         super.signal(type, objs);
     }
 
-    protected void setAvailableOperations(Object objectDefinition){
+    private void setAvailableOperations(Object objectDefinition){
         List<Method> methods = Arrays.asList(objectDefinition.getClass().getDeclaredMethods());
         methods.forEach(m -> {
             Annotation[] annotations = m.getAnnotations();
