@@ -9,9 +9,9 @@ public class LampArtifact extends SemanticArtifact {
 	private final String statePropertyName = "stateOn";
 
 	public void init(boolean isOn) {
-		super.init(this, this.getId().getName());
+		super.init(this, "Lamp", this.getId().getName());
 		this.on = isOn;
-		defineObsProperty(statePropertyName, this.on); //define a new property that can be observed by agents
+		defineObsProperty(statePropertyName, "boolean", this.on); //define a new property that can be observed by agents
 	}
 
 	@OPERATION void lampState(OpFeedbackParam<Boolean> state) {

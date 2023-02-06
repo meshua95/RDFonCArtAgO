@@ -12,11 +12,11 @@ import java.util.Map;
 
 public class SemanticEnvironment {
 
-    public static final String owlNamespace = "http://www.w3.org/2002/07/owl#";
-    public static final String rdfSchemaNamespace = "http://www.w3.org/2000/01/rdf-schema#";
-    public static final String rdfSyntaxNamespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    private static final String owlNamespace = "http://www.w3.org/2002/07/owl#";
+    private static final String rdfSchemaNamespace = "http://www.w3.org/2000/01/rdf-schema#";
+    private static final String rdfSyntaxNamespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
-    public static final String base = "http://www.semanticweb.org/ontologies/artifacts#";
+    private static final String base = "http://www.semanticweb.org/ontologies/artifacts#";
 
     public static final Map<String, String> namespaces = new HashMap<>();
 
@@ -79,15 +79,15 @@ public class SemanticEnvironment {
      * @param propertyName  nome della proprietà da associare (es: stateOnOff)
      * @param propertyValue valore della proprietà associata allla specifica istanza (es: false)
      */
-    public void defineDataProperty(String namespace, String resourceName, String resourceId, String propertyName, Object propertyValue) {
+    public void defineDataProperty(String namespace, String resourceName, String resourceId, String propertyName, String type, Object propertyValue) {
         Resource classResource = model.getResource(namespace + resourceName);
         Resource resourceInstance = getResourceInstance(namespace, resourceId, classResource);
-        addDataProperty(namespace, classResource, propertyName, propertyValue.getClass().getSimpleName());
+        addDataProperty(namespace, classResource, propertyName, type);
         addDataPropertyValue(resourceInstance, propertyName, propertyValue);
     }
 
-    public void defineDataProperty(String resourceName, String resourceId, String propertyName, Object propertyValue) {
-        defineDataProperty(base, resourceName, resourceId, propertyName, propertyValue);
+    public void defineDataProperty(String resourceName, String resourceId, String propertyName, String type, Object propertyValue) {
+        defineDataProperty(base, resourceName, resourceId, propertyName, type, propertyValue);
     }
 
     public void addOperation(String namespace, String operationName, String classResourceName){

@@ -11,7 +11,7 @@ public class LightSwitchArtifact extends SemanticArtifact {
         super.init(this, this.getId().getName());
 
         this.press = isPressed;
-        defineObsProperty(pressPropertyName, this.press);
+        defineObsProperty(pressPropertyName, "boolean", this.press);
         defineRelationship("connectedTo", idConnection);
     }
 

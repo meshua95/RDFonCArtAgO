@@ -7,18 +7,21 @@ import org.apache.jena.query.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ServiceArtifact extends Artifact {
 
-    private static final String prefixesList = "PREFIX owl: <" + SemanticEnvironment.owlNamespace + ">"
-            + "PREFIX rdf: <" + SemanticEnvironment.rdfSyntaxNamespace + "> "
-            + "PREFIX rdfs: <" + SemanticEnvironment.rdfSchemaNamespace + "> "
-            + "PREFIX : <" + SemanticEnvironment.base + "> ";
+    private static String prefixesList = "";
 
     private static SemanticEnvironment environment;
 
     public void init(){
         environment = SemanticEnvironment.getInstance();
+        Set<Map.Entry<String, String>> namespaces = environment.namespaces.entrySet();
+        for(Map.Entry e: namespaces){
+            prefixesList = prefixesList.concat("PREFIX " + e.getKey() + ": <"+ e.getValue() + "> ");
+        }
     }
 
     @OPERATION
