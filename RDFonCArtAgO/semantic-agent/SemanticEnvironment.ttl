@@ -1,33 +1,104 @@
-<press>  <domain>  <Command> , <LightSwitchArtifact> ;
-        <type>    <DatatypeProperty> .
+<http://www.semanticweb.org/ontologies/artifacts#lightSwitchState>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> .
 
-<switchOn>  <domain>  <Command> , <LampArtifact> ;
-        <type>    <DatatypeProperty> .
+<http://www.semanticweb.org/ontologies/artifacts#Command>
+        a       <http://www.w3.org/2002/07/owl#Class> .
 
-<switchOff>  <domain>  <Command> , <LampArtifact> ;
-        <type>    <DatatypeProperty> .
+<http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact>
+        a       <http://www.w3.org/2002/07/owl#Class> ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>
+                <http://www.semanticweb.org/ontologies/artifacts#Device> .
 
-<lampId_0>  <stateOn>  "false" ;
-        <type>     <NamedIndividual> , <LampArtifact> .
+<http://www.semanticweb.org/ontologies/artifacts#switchOn>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#LampArtifact> .
 
-<LampArtifact>  <subClassOf>  <Device> ;
-        <type>        <Class> .
+<http://www.semanticweb.org/ontologies/artifacts#is_released>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> , <http://www.semanticweb.org/ontologies/artifacts#Event> ;
+        <http://www.w3.org/2000/01/rdf-schema#range>
+                <http://www.semanticweb.org/ontologies/artifacts#Date> .
 
-<Event>  <type>  <Class> .
+<http://www.semanticweb.org/ontologies/artifacts#Event>
+        a       <http://www.w3.org/2002/07/owl#Class> .
 
-<Command>  <type>  <Class> .
+<http://www.semanticweb.org/ontologies/artifacts#switchOff>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#LampArtifact> .
 
-<LightSwitchArtifact>
-        <subClassOf>  <Device> ;
-        <type>        <Class> .
+<http://www.semanticweb.org/ontologies/artifacts#Device>
+        a       <http://www.w3.org/2002/07/owl#Class> .
 
-<release>  <domain>  <Command> , <LightSwitchArtifact> ;
-        <type>    <DatatypeProperty> .
+<http://www.semanticweb.org/ontologies/artifacts#is_pressed>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> , <http://www.semanticweb.org/ontologies/artifacts#Event> ;
+        <http://www.w3.org/2000/01/rdf-schema#range>
+                <http://www.semanticweb.org/ontologies/artifacts#Date> .
 
-<Device>  <type>  <Class> .
+<http://www.semanticweb.org/ontologies/artifacts#LampArtifact>
+        a       <http://www.w3.org/2002/07/owl#Class> ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>
+                <http://www.semanticweb.org/ontologies/artifacts#Device> .
 
-<lsId_0>  <type>  <NamedIndividual> , <LightSwitchArtifact> .
+<http://www.semanticweb.org/ontologies/artifacts#is_on>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#LampArtifact> , <http://www.semanticweb.org/ontologies/artifacts#Event> ;
+        <http://www.w3.org/2000/01/rdf-schema#range>
+                <http://www.semanticweb.org/ontologies/artifacts#Date> .
 
-<stateOn>  <domain>  <LampArtifact> ;
-        <range>   <Boolean> ;
-        <type>    <DatatypeProperty> .
+<http://www.semanticweb.org/ontologies/artifacts#press>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> .
+
+<http://www.semanticweb.org/ontologies/artifacts#release>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> .
+
+<http://www.semanticweb.org/ontologies/artifacts#lampId_0>
+        a          <http://www.w3.org/2002/07/owl#NamedIndividual> , <http://www.semanticweb.org/ontologies/artifacts#LampArtifact> ;
+        <http://www.semanticweb.org/ontologies/artifacts#is_on>
+                "Mon Feb 06 23:08:33 CET 2023" ;
+        <stateOn>  "false" .
+
+<http://www.semanticweb.org/ontologies/artifacts#lsId_0>
+        a               <http://www.w3.org/2002/07/owl#NamedIndividual> , <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> ;
+        <http://www.semanticweb.org/ontologies/artifacts#connectedTo>
+                <http://www.semanticweb.org/ontologies/artifacts#lampId_0> ;
+        <http://www.semanticweb.org/ontologies/artifacts#is_pressed>
+                "Mon Feb 06 23:08:32 CET 2023" ;
+        <http://www.semanticweb.org/ontologies/artifacts#is_released>
+                "Mon Feb 06 23:08:32 CET 2023" ;
+        <statePressed>  "false" .
+
+<stateOn>  a    <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#LampArtifact> ;
+        <http://www.w3.org/2000/01/rdf-schema#range>
+                <http://www.semanticweb.org/ontologies/artifacts#Boolean> .
+
+<statePressed>  a  <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> ;
+        <http://www.w3.org/2000/01/rdf-schema#range>
+                <http://www.semanticweb.org/ontologies/artifacts#Boolean> .
+
+<http://www.semanticweb.org/ontologies/artifacts#connectedTo>
+        a       <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> ;
+        <http://www.w3.org/2000/01/rdf-schema#range>
+                <http://www.semanticweb.org/ontologies/artifacts#Device> .
+
+<http://www.semanticweb.org/ontologies/artifacts#lampState>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#LampArtifact> .

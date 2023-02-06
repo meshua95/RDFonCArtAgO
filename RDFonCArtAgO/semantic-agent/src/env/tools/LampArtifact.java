@@ -8,8 +8,8 @@ public class LampArtifact extends SemanticArtifact {
 	private boolean on;
 	private final String statePropertyName = "stateOn";
 
-	public void init(String id, boolean isOn) {
-		super.init(this, id);
+	public void init(boolean isOn) {
+		super.init(this, this.getId().getName());
 		this.on = isOn;
 		defineObsProperty(statePropertyName, this.on); //define a new property that can be observed by agents
 	}
@@ -37,6 +37,10 @@ public class LampArtifact extends SemanticArtifact {
 			String isOffEvent = "is_off";
 			signal(isOffEvent);
 		}
+	}
+
+	public void dispose(){
+		super.dispose();
 	}
 
 }

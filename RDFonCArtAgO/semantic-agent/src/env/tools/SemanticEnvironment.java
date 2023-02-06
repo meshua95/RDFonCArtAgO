@@ -6,7 +6,9 @@ import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.riot.RIOT;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SemanticEnvironment {
 
@@ -14,7 +16,9 @@ public class SemanticEnvironment {
     public static final String rdfSchemaNamespace = "http://www.w3.org/2000/01/rdf-schema#";
     public static final String rdfSyntaxNamespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
-    public static final String base = "http://www.semanticweb.org/ontologies/artifacts#";;
+    public static final String base = "http://www.semanticweb.org/ontologies/artifacts#";
+
+    public static final Map<String, String> namespaces = new HashMap<>();
 
     private final Resource command;
     private final Resource device;
@@ -25,9 +29,13 @@ public class SemanticEnvironment {
 
     private SemanticEnvironment(){
         model = ModelFactory.createDefaultModel();
-        command = addOwlObject("Command");
-        device = addOwlObject("Device");
-        event = addOwlObject("Event");
+        namespaces.put("owl", owlNamespace);
+        namespaces.put("rdfs", rdfSchemaNamespace);
+        namespaces.put("rdf", rdfSyntaxNamespace);
+        namespaces.put("", base);
+        command = addOwlObject(base, "Command");
+        device = addOwlObject(base, "Device");
+        event = addOwlObject(base, "Event");
     }
 
     public static SemanticEnvironment getInstance(){
@@ -37,22 +45,30 @@ public class SemanticEnvironment {
         return instance;
     }
 
-    public void createResource(String resourceName) {
-        Resource classResource = model.getResource(base + resourceName);
+    public void createResource(String namespace, String resourceName) {
+        Resource classResource = model.getResource(namespace + resourceName);
         if(!model.containsResource(classResource)){
-            classResource = addOwlObject(resourceName);
+            classResource = addOwlObject(namespace, resourceName);
             setDeviceSubclass(classResource);
         }
     }
 
-    public void createInstance(String artifactId, String artifactClass) {
-        Resource resourceName = model.createResource(base + artifactId);
+    public void createResource(String resourceName) {
+        createResource(base, resourceName);
+    }
+
+    public void createInstance(String namespace, String artifactId, String artifactClass) {
+        Resource resourceName = model.createResource(namespace + artifactId);
         Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
-        Resource artifactResource = model.getResource(base + artifactClass);
+        Resource artifactResource = model.getResource(namespace + artifactClass);
         model.add(model.createStatement(resourceName, typeProperty, artifactResource));
 
         Resource instanceDefinition = model.createProperty(owlNamespace, "NamedIndividual");
         model.add(model.createStatement(resourceName, typeProperty, instanceDefinition));
+    }
+
+    public void createInstance(String artifactId, String artifactClass) {
+        createInstance(base, artifactId, artifactClass);
     }
 
     /**
@@ -63,38 +79,50 @@ public class SemanticEnvironment {
      * @param propertyName  nome della proprietà da associare (es: stateOnOff)
      * @param propertyValue valore della proprietà associata allla specifica istanza (es: false)
      */
-    public void defineDataProperty(String resourceName, String resourceId, String propertyName, Object propertyValue) {
-        Resource classResource = model.getResource(base + resourceName);
-        Resource resourceInstance = getResourceInstance(resourceId, classResource);
-        addDataProperty(classResource, propertyName, propertyValue.getClass().getSimpleName());
+    public void defineDataProperty(String namespace, String resourceName, String resourceId, String propertyName, Object propertyValue) {
+        Resource classResource = model.getResource(namespace + resourceName);
+        Resource resourceInstance = getResourceInstance(namespace, resourceId, classResource);
+        addDataProperty(namespace, classResource, propertyName, propertyValue.getClass().getSimpleName());
         addDataPropertyValue(resourceInstance, propertyName, propertyValue);
     }
 
-    public void addOperation(String operationName, String classResourceName){
-        Resource operation = model.createResource(base + operationName);
-        Resource classResource = model.getResource(base + classResourceName);
+    public void defineDataProperty(String resourceName, String resourceId, String propertyName, Object propertyValue) {
+        defineDataProperty(base, resourceName, resourceId, propertyName, propertyValue);
+    }
+
+    public void addOperation(String namespace, String operationName, String classResourceName){
+        Resource operation = model.createResource(namespace + operationName);
+        Resource classResource = model.getResource(namespace + classResourceName);
 
         setDomain(operation, classResource);
         setDomain(operation, command);
         setDataType(operation);
     }
 
-    public void addObjectProperty(String name, String refId, String artifactId, String artifactClass) {
-        Resource objProperty = model.getResource(base + name);
+    public void addOperation(String operationName, String classResourceName){
+        addOperation(base, operationName, classResourceName);
+    }
+
+    public void addObjectProperty(String namespace, String name, String refId, String artifactId, String artifactClass) {
+        Resource objProperty = model.getResource(namespace + name);
         if(!model.containsResource(objProperty)){
-            objProperty = model.createResource(base + name);
+            objProperty = model.createResource(namespace + name);
             setDevice(objProperty);
-            Resource classArt = model.getResource(base + artifactClass);
+            Resource classArt = model.getResource(namespace + artifactClass);
             setDomain(objProperty, classArt);
             setObjecProperty(objProperty);
         }
 
-        if(checkCanRelate(refId )){
-            Resource firstInstance = model.getResource(base + artifactId);
-            Resource secondInstance = model.getResource(base + refId);
-            Property prop = model.getProperty(base, name);
+        if(checkCanRelate(namespace, refId)){
+            Resource firstInstance = model.getResource(namespace + artifactId);
+            Resource secondInstance = model.getResource(namespace + refId);
+            Property prop = model.getProperty(namespace, name);
             model.add(model.createStatement(firstInstance, prop, secondInstance));
         }
+    }
+
+    public void addObjectProperty(String name, String refId, String artifactId, String artifactClass) {
+        addObjectProperty(base, name, refId, artifactId, artifactClass);
     }
 
     public Model getModel(){
@@ -108,21 +136,25 @@ public class SemanticEnvironment {
     5 - prende la data
     6 - aggiunge la proprietà timestamp all'evento
      */
-    public void addSignaledEvent(String eventName, String resourceId, String artifactClass){
-        Resource event = model.getResource(base + eventName);
+    public void addSignaledEvent(String namespace, String eventName, String resourceId, String artifactClass){
+        Resource event = model.getResource(namespace + eventName);
         if(!model.containsResource(event)){
-            event = model.createResource(base + eventName);
+            event = model.createResource(namespace + eventName);
             setDomain(event, this.event);
-            setDomain(event, model.getResource(base + artifactClass));
+            setDomain(event, model.getResource(namespace + artifactClass));
             setDataType(event);
-            setRange(event, base, Date.class.getSimpleName());
+            setRange(event, namespace, Date.class.getSimpleName());
         }
 
-        Resource resourceInstance = model.getResource(base + resourceId);
-        removePrevEvent(resourceInstance);
-        Property prop = model.createProperty(base + eventName);
+        Resource resourceInstance = model.getResource(namespace + resourceId);
+        //removePrevEvent(resourceInstance);
+        Property prop = model.createProperty(namespace + eventName);
         Date timestamp = new Date();
         model.add(model.createStatement(resourceInstance, prop, timestamp.toString()));
+    }
+
+    public void addSignaledEvent(String eventName, String resourceId, String artifactClass){
+        addSignaledEvent(base, eventName, resourceId, artifactClass);
     }
 
     public void printAllStatement(){
@@ -136,10 +168,10 @@ public class SemanticEnvironment {
      * @param resId     è l'id dell'istanza (es: lamp_0)
      * @param classRes  è la risorsa relativa alla classe dell'artefatto (es: Lamp)
      */
-    private Resource getResourceInstance(String resId, Resource classRes) {
-        Resource resInstance = model.getResource(base + resId);
+    private Resource getResourceInstance(String namespace, String resId, Resource classRes) {
+        Resource resInstance = model.getResource(namespace + resId);
         if (resInstance.isAnon()) {
-            resInstance = model.createResource(base + resId);
+            resInstance = model.createResource(namespace + resId);
             Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
             Resource owlType = model.createResource(owlNamespace + "NamedIndividual");
             model.add(model.createStatement(resInstance, typeProperty, classRes));
@@ -154,8 +186,8 @@ public class SemanticEnvironment {
      * @param name  nome della nuova risorsa
      * @return      risorsa creata e dichiarata come owl:Class
      */
-    private Resource addOwlObject(String name){
-        Resource resourceName = model.createResource(base + name);
+    private Resource addOwlObject(String namespace, String name){
+        Resource resourceName = model.createResource(namespace + name);
         Property typeProperty = model.createProperty(rdfSyntaxNamespace, "type");
         Resource classResource = model.createProperty(owlNamespace, "Class");
 
@@ -185,22 +217,8 @@ public class SemanticEnvironment {
         model.add(model.createStatement(propName, typeProperty, typeResource));
     }
 
-    private void removePrevEvent(Resource resInstance){
-        Selector selector = new SimpleSelector(null, null, this.event);
-        List<Statement> stmtIterator = model.listStatements(selector).toList();
-        for (Statement s: stmtIterator){
-            Property prop = model.createProperty(s.getSubject().getNameSpace(), s.getSubject().getLocalName());
-
-            selector = new SimpleSelector(resInstance, prop, (RDFNode) null);
-            List<Statement> instanceStatement = model.listStatements(selector).toList();
-            for(Statement stmt: instanceStatement){
-                model.remove(stmt);
-            }
-        }
-    }
-
-    private boolean checkCanRelate(String refId){
-        Resource idResource = model.createResource(base + refId);
+    private boolean checkCanRelate(String namespace, String refId){
+        Resource idResource = model.createResource(namespace + refId);
         Property type = model.createProperty(rdfSyntaxNamespace, "type");
         Selector selector = new SimpleSelector(idResource, type, (RDFNode) null);
         List<Statement> stmtIterator = model.listStatements(selector).toList();
@@ -235,9 +253,9 @@ public class SemanticEnvironment {
         model.add(model.createStatement(resourceInstance, property, value));
     }
 
-    private void addDataProperty(Resource classResource, String propertyName, String propertyType) {
+    private void addDataProperty(String namespace, Resource classResource, String propertyName, String propertyType) {
         Resource propName = model.createResource(propertyName);
-        setRange(propName, base, propertyType);
+        setRange(propName, namespace, propertyType);
         setDomain(propName, classResource);
         setDataType(propName);
     }
@@ -245,6 +263,29 @@ public class SemanticEnvironment {
     private void setDeviceSubclass(Resource classResource) {
         Property subClassProperty = model.createProperty(rdfSchemaNamespace, "subClassOf");
         model.add(model.createStatement(classResource, subClassProperty, device));
+    }
+
+    public void addNamespace(String prefix, String namespace){
+        if (!namespaces.containsKey(prefix)){
+            namespaces.put(prefix, namespace);
+        }
+    }
+
+    public void removeInstance(String namespace, String resourceId){
+        SimpleSelector selector = new SimpleSelector(model.getResource(namespace+resourceId), null, (RDFNode) null);
+        List<Statement> subjectStatements = model.listStatements(selector).toList();
+        for(Statement s: subjectStatements){
+            model.remove(s);
+        }
+        selector = new SimpleSelector(null, null, model.getResource(namespace + resourceId));
+        List<Statement> objectStatements = model.listStatements(selector).toList();
+        for(Statement s: objectStatements){
+            model.remove(s);
+        }
+    }
+
+    public void removeInstance(String resourceId){
+        removeInstance(base, resourceId);
     }
 
 }

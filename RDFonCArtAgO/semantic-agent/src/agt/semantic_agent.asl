@@ -14,10 +14,14 @@
     +!start 
         <- .println("CreateLamp...");
            ?isOn(InitialLampState);
-           makeArtifact(lampId_0, "tools.LampArtifact", [lampId_0, InitialLampState], LampRef);
+           makeArtifact(lampId_0, "tools.LampArtifact", [InitialLampState], LampRef);
            .println("Create Lightswitch...");
            ?isPressed(InitialLSState);
-           makeArtifact(lsId_0, "tools.LightSwitchArtifact", [lsId_0, InitialLSState, lampId_0], LSRef);
+           makeArtifact(lsId_0, "tools.LightSwitchArtifact", [InitialLSState, lampId_0], LSRef);
+           press [LSRef];
+           release[LSRef];
+           press[LSRef];
+           release[LSRef];
            .println("Created all");
            makeArtifact(service, "tools.ServiceArtifact", [], ServiceRef);
            .println("Query: SELECT ?id WHERE {?subject rdfs:subClassOf :Device . ?id rdf:type ?subject}");

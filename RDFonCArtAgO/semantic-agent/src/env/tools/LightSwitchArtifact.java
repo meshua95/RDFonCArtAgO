@@ -7,8 +7,8 @@ public class LightSwitchArtifact extends SemanticArtifact {
     private final String pressPropertyName = "statePressed";
     private boolean press;
 
-    void init(String id, boolean isPressed, String idConnection){
-        super.init(this, id);
+    void init(boolean isPressed, String idConnection){
+        super.init(this, this.getId().getName());
 
         this.press = isPressed;
         defineObsProperty(pressPropertyName, this.press);
@@ -40,7 +40,10 @@ public class LightSwitchArtifact extends SemanticArtifact {
             String isReleasedEvent = "is_released";
             signal(isReleasedEvent);
         }
+    }
 
+    public void dispose(){
+        super.dispose();
     }
 
 }
