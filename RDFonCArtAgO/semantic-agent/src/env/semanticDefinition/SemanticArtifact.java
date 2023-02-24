@@ -1,4 +1,4 @@
-package tools;
+package semanticDefinition;
 
 import cartago.Artifact;
 
@@ -9,14 +9,14 @@ import java.util.List;
 
 public abstract class SemanticArtifact extends Artifact {
 
-    private SemanticEnvironment environment = null;
+    private SemanticEnvironmentImpl environment = null;
 
     private String namespace = "";
     private String artifactClass;
     private String artifactId;
 
     public void init(Object className, String resourcePrefix, String resourceNamespace, String resourceName, String artifactId){
-        environment = SemanticEnvironment.getInstance();
+        environment = SemanticEnvironmentImpl.getInstance();
         environment.addNamespace(resourcePrefix, resourceNamespace);
         this.namespace = resourceNamespace;
         this.artifactClass = resourceName;
@@ -27,7 +27,7 @@ public abstract class SemanticArtifact extends Artifact {
     }
 
     public void init(Object className, String resourceName, String artifactId){
-        environment = SemanticEnvironment.getInstance();
+        environment = SemanticEnvironmentImpl.getInstance();
         this.artifactClass = resourceName;
         this.artifactId = artifactId;
         environment.createResource(artifactClass);

@@ -1,6 +1,10 @@
 package tools;
 
 import cartago.*;
+import semanticDefinition.SemanticArtifact;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LampArtifact extends SemanticArtifact {
 
@@ -18,25 +22,19 @@ public class LampArtifact extends SemanticArtifact {
 		state.set(this.on);
 	}
 
+	/*OPERATIONS*/
 	@OPERATION void switchOn() {
-		this.switchTo(true);
+		this.on = true;
+		ObsProperty state = getObsProperty("stateOn");
+		state.updateValue(this.on);
+		signal("is_on");
 	}
 
 	@OPERATION void switchOff() {
-		this.switchTo(false);
-	}
-
-	private void switchTo(boolean on) {
-		this.on = on;
-		ObsProperty state = getObsProperty(statePropertyName);	//get the object modelling the observable property "state"
+		this.on = false;
+		ObsProperty state = getObsProperty("stateOn");
 		state.updateValue(this.on);
-		if(this.on){
-			String isOnEvent = "is_on";
-			signal(isOnEvent);
-		} else {
-			String isOffEvent = "is_off";
-			signal(isOffEvent);
-		}
+		signal("is_off");
 	}
 
 	public void dispose(){

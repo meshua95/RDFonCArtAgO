@@ -1,4 +1,4 @@
-package tools;
+package semanticDefinition;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.Lang;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SemanticEnvironment {
+public class SemanticEnvironmentImpl implements SemanticEnvironment{
 
     private static final String owlNamespace = "http://www.w3.org/2002/07/owl#";
     private static final String rdfSchemaNamespace = "http://www.w3.org/2000/01/rdf-schema#";
@@ -24,10 +24,10 @@ public class SemanticEnvironment {
     private final Resource device;
     private final Resource event;
 
-    private static SemanticEnvironment instance = null;
+    private static SemanticEnvironmentImpl instance = null;
     private final Model model;
 
-    private SemanticEnvironment(){
+    private SemanticEnvironmentImpl(){
         model = ModelFactory.createDefaultModel();
         namespaces.put("owl", owlNamespace);
         namespaces.put("rdfs", rdfSchemaNamespace);
@@ -38,9 +38,9 @@ public class SemanticEnvironment {
         event = addOwlObject(base, "Event");
     }
 
-    public static SemanticEnvironment getInstance(){
+    public static SemanticEnvironmentImpl getInstance(){
         if (instance == null) {
-            instance = new SemanticEnvironment();
+            instance = new SemanticEnvironmentImpl();
         }
         return instance;
     }

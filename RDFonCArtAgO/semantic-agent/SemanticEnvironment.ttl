@@ -1,8 +1,3 @@
-<https://mioNamespace#lampState>
-        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
-        <http://www.w3.org/2000/01/rdf-schema#domain>
-                <http://www.semanticweb.org/ontologies/artifacts#Command> , <https://mioNamespace#Lamp> .
-
 <http://www.semanticweb.org/ontologies/artifacts#lightSwitchState>
         a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
         <http://www.w3.org/2000/01/rdf-schema#domain>
@@ -11,15 +6,20 @@
 <http://www.semanticweb.org/ontologies/artifacts#Command>
         a       <http://www.w3.org/2002/07/owl#Class> .
 
+<http://www.semanticweb.org/ontologies/artifacts#Lamp>
+        a       <http://www.w3.org/2002/07/owl#Class> ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf>
+                <http://www.semanticweb.org/ontologies/artifacts#Device> .
+
 <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact>
         a       <http://www.w3.org/2002/07/owl#Class> ;
         <http://www.w3.org/2000/01/rdf-schema#subClassOf>
                 <http://www.semanticweb.org/ontologies/artifacts#Device> .
 
-<https://mioNamespace#lampId_0>
-        a                             <http://www.w3.org/2002/07/owl#NamedIndividual> , <https://mioNamespace#Lamp> ;
-        <https://mioNamespace#is_on>  "Mon Feb 06 23:49:41 CET 2023" ;
-        <stateOn>                     "false" .
+<http://www.semanticweb.org/ontologies/artifacts#switchOn>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#Lamp> .
 
 <http://www.semanticweb.org/ontologies/artifacts#is_released>
         a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
@@ -31,6 +31,11 @@
 <http://www.semanticweb.org/ontologies/artifacts#Event>
         a       <http://www.w3.org/2002/07/owl#Class> .
 
+<http://www.semanticweb.org/ontologies/artifacts#switchOff>
+        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+        <http://www.w3.org/2000/01/rdf-schema#domain>
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#Lamp> .
+
 <http://www.semanticweb.org/ontologies/artifacts#Device>
         a       <http://www.w3.org/2002/07/owl#Class> .
 
@@ -41,17 +46,12 @@
         <http://www.w3.org/2000/01/rdf-schema#range>
                 <http://www.semanticweb.org/ontologies/artifacts#Date> .
 
-<https://mioNamespace#switchOff>
+<http://www.semanticweb.org/ontologies/artifacts#is_on>
         a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
         <http://www.w3.org/2000/01/rdf-schema#domain>
-                <http://www.semanticweb.org/ontologies/artifacts#Command> , <https://mioNamespace#Lamp> .
-
-<https://mioNamespace#is_on>
-        a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
-        <http://www.w3.org/2000/01/rdf-schema#domain>
-                <https://mioNamespace#Lamp> , <http://www.semanticweb.org/ontologies/artifacts#Event> ;
+                <http://www.semanticweb.org/ontologies/artifacts#Lamp> , <http://www.semanticweb.org/ontologies/artifacts#Event> ;
         <http://www.w3.org/2000/01/rdf-schema#range>
-                <https://mioNamespace#Date> .
+                <http://www.semanticweb.org/ontologies/artifacts#Date> .
 
 <http://www.semanticweb.org/ontologies/artifacts#press>
         a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
@@ -63,19 +63,27 @@
         <http://www.w3.org/2000/01/rdf-schema#domain>
                 <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> .
 
+<http://www.semanticweb.org/ontologies/artifacts#lampId_0>
+        a          <http://www.w3.org/2002/07/owl#NamedIndividual> , <http://www.semanticweb.org/ontologies/artifacts#Lamp> ;
+        <http://www.semanticweb.org/ontologies/artifacts#is_on>
+                "Fri Feb 24 10:08:04 CET 2023" ;
+        <stateOn>  "false" .
+
 <http://www.semanticweb.org/ontologies/artifacts#lsId_0>
         a               <http://www.w3.org/2002/07/owl#NamedIndividual> , <http://www.semanticweb.org/ontologies/artifacts#LightSwitchArtifact> ;
+        <http://www.semanticweb.org/ontologies/artifacts#connectedTo>
+                <http://www.semanticweb.org/ontologies/artifacts#lampId_0> ;
         <http://www.semanticweb.org/ontologies/artifacts#is_pressed>
-                "Mon Feb 06 23:49:41 CET 2023" ;
+                "Fri Feb 24 10:08:03 CET 2023" ;
         <http://www.semanticweb.org/ontologies/artifacts#is_released>
-                "Mon Feb 06 23:49:41 CET 2023" ;
+                "Fri Feb 24 10:08:03 CET 2023" ;
         <statePressed>  "false" .
 
 <stateOn>  a    <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
         <http://www.w3.org/2000/01/rdf-schema#domain>
-                <https://mioNamespace#Lamp> ;
+                <http://www.semanticweb.org/ontologies/artifacts#Lamp> ;
         <http://www.w3.org/2000/01/rdf-schema#range>
-                <https://mioNamespace#boolean> .
+                <http://www.semanticweb.org/ontologies/artifacts#boolean> .
 
 <statePressed>  a  <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
         <http://www.w3.org/2000/01/rdf-schema#domain>
@@ -90,12 +98,7 @@
         <http://www.w3.org/2000/01/rdf-schema#range>
                 <http://www.semanticweb.org/ontologies/artifacts#Device> .
 
-<https://mioNamespace#switchOn>
+<http://www.semanticweb.org/ontologies/artifacts#lampState>
         a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
         <http://www.w3.org/2000/01/rdf-schema#domain>
-                <http://www.semanticweb.org/ontologies/artifacts#Command> , <https://mioNamespace#Lamp> .
-
-<https://mioNamespace#Lamp>
-        a       <http://www.w3.org/2002/07/owl#Class> ;
-        <http://www.w3.org/2000/01/rdf-schema#subClassOf>
-                <http://www.semanticweb.org/ontologies/artifacts#Device> .
+                <http://www.semanticweb.org/ontologies/artifacts#Command> , <http://www.semanticweb.org/ontologies/artifacts#Lamp> .

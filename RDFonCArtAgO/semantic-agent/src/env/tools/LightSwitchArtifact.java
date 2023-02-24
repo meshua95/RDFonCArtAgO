@@ -1,6 +1,7 @@
 package tools;
 
 import cartago.*;
+import semanticDefinition.SemanticArtifact;
 
 public class LightSwitchArtifact extends SemanticArtifact {
 

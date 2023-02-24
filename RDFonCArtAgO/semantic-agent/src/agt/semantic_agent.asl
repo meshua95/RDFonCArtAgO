@@ -11,7 +11,7 @@
 
 /* Plans. */
     /* Proactive plans. */
-    +!start 
+    +!start
         <- .println("CreateLamp...");
            ?isOn(InitialLampState);
            makeArtifact(lampId_0, "tools.LampArtifact", [InitialLampState], LampRef);

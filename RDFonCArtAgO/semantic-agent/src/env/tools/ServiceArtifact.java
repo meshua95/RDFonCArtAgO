@@ -4,6 +4,7 @@ import cartago.Artifact;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
 import org.apache.jena.query.*;
+import semanticDefinition.SemanticEnvironmentImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,10 @@ public class ServiceArtifact extends Artifact {
 
     private static String prefixesList = "";
 
-    private static SemanticEnvironment environment;
+    private static SemanticEnvironmentImpl environment;
 
     public void init(){
-        environment = SemanticEnvironment.getInstance();
+        environment = SemanticEnvironmentImpl.getInstance();
         Set<Map.Entry<String, String>> namespaces = environment.namespaces.entrySet();
         for(Map.Entry e: namespaces){
             prefixesList = prefixesList.concat("PREFIX " + e.getKey() + ": <"+ e.getValue() + "> ");
