@@ -12,30 +12,19 @@
 /* Plans. */
     /* Proactive plans. */
     +!start
-        <- .println("CreateLamp...");
-           ?isOn(InitialLampState);
-           makeArtifact(lampId_0, "tools.LampArtifact", [InitialLampState], LampRef);
-           .println("Create Lightswitch...");
-           ?isPressed(InitialLSState);
-           makeArtifact(lsId_0, "tools.LightSwitchArtifact", [InitialLSState, lampId_0], LSRef);
-           press [LSRef];
-           release[LSRef];
-           press[LSRef];
-           release[LSRef];
-           .println("Created all");
-           makeArtifact(service, "tools.ServiceArtifact", [], ServiceRef);
-           .println("Query: SELECT ?id WHERE {?subject rdfs:subClassOf :Device . ?id rdf:type ?subject}");
-           query("SELECT ?id WHERE {?subject rdfs:subClassOf :Device . ?id rdf:type ?subject}", ResultSet);
-           getAtIndex(1, ResultSet, Element);
-           getValue("id", Element, Value);
-           .println("Query result: ", Value);
-           lampState(BeforeState);
-           .println(Value, " artifact state: ", BeforeState);
-           lookupArtifact(Value, IdArtifact);
-           .println("Switch on...");
-           switchOn [artifact_id(IdArtifact)];
-           lampState(AfterState);
-           .println(Value, " artifact state: ", AfterState);.
+        <-  makeArtifact(service, "tools.ServiceArtifact", [], ServiceRef);
+            .println("Query: SELECT ?id WHERE {?subject rdfs:subClassOf :Device . ?id rdf:type ?subject}");
+            query("SELECT ?id WHERE { ?id rdf:type :Lamp }", ResultSet);
+            getAtIndex(0, ResultSet, Element);
+            getValue("id", Element, Value);
+            .println("Query result: ", Value);
+            lookupArtifact(Value, IdArtifact);
+            lampState(FirstState) [artifact_id(IdArtifact)];
+            .println("State: ", FirstState);
+            .println("Switch on...");
+            switchOn [artifact_id(IdArtifact)];
+            lampState(SecondState) [artifact_id(IdArtifact)];
+            .println("State: ", SecondState);.
 
 /* ############### */
 
