@@ -11,8 +11,8 @@
 <http://www.semanticweb.org/ontologies/artifacts#lamp_0>
         a          <http://www.w3.org/2002/07/owl#NamedIndividual> , <http://www.semanticweb.org/ontologies/artifacts#Lamp> ;
         <http://www.semanticweb.org/ontologies/artifacts#is_on>
-                "Tue Feb 28 20:55:40 CET 2023" ;
-        <stateOn>  "false" .
+                "Sat Mar 04 14:59:05 CET 2023" ;
+        <stateOn>  "true" .
 
 <http://www.semanticweb.org/ontologies/artifacts#is_on>
         a       <http://www.w3.org/2002/07/owl#DatatypeProperty> ;

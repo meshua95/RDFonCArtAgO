@@ -31,9 +31,8 @@ public class LightSwitchArtifact extends SemanticArtifact {
     }
 
     private void setPress(boolean p){
-        ObsProperty prop = getObsProperty(pressPropertyName);
         this.press = p;
-        prop.updateValue(this.press);
+        updateValue(pressPropertyName, this.press);
         if(p){
             String isPressedEvent = "is_pressed";
             signal(isPressedEvent);

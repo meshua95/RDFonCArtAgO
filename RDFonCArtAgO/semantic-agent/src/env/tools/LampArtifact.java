@@ -25,15 +25,13 @@ public class LampArtifact extends SemanticArtifact {
 	/*OPERATIONS*/
 	@OPERATION void switchOn() {
 		this.on = true;
-		ObsProperty state = getObsProperty("stateOn");
-		state.updateValue(this.on);
+		updateValue("stateOn", this.on);
 		signal("is_on");
 	}
 
 	@OPERATION void switchOff() {
 		this.on = false;
-		ObsProperty state = getObsProperty("stateOn");
-		state.updateValue(this.on);
+		updateValue("stateOn", this.on);
 		signal("is_off");
 	}
 

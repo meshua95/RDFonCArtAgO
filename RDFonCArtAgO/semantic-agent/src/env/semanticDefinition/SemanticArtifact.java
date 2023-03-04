@@ -1,6 +1,7 @@
 package semanticDefinition;
 
 import cartago.Artifact;
+import cartago.ObsProperty;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -56,6 +57,16 @@ public abstract class SemanticArtifact extends Artifact {
         }
 
         return super.defineObsProperty(name, refId);
+    }
+
+    public void updateValue(String property, Object value){
+        ObsProperty state = getObsProperty(property);
+        state.updateValue(value);
+        if(namespace.isEmpty()){
+            environment.updateDataProperty(this.artifactId, property, value);
+        } else {
+            environment.updateDataProperty(namespace, this.artifactId, property, value);
+        }
     }
 
     protected void signal(String type, Object... objs){

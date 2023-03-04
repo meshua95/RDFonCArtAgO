@@ -90,6 +90,15 @@ public class SemanticEnvironmentImpl implements SemanticEnvironment{
         defineDataProperty(base, resourceName, resourceId, propertyName, type, propertyValue);
     }
 
+    public void updateDataProperty(String namespace, String resourceId, String propertyName, Object propertyValue){
+        Resource resInstance = model.getResource(namespace + resourceId);
+        updateDataPoropertyValue(resInstance, propertyName, propertyValue);
+    }
+
+    public void updateDataProperty(String resourceId, String propertyName, Object propertyValue) {
+        updateDataProperty(base, resourceId, propertyName, propertyValue);
+    }
+
     public void addOperation(String namespace, String operationName, String classResourceName){
         Resource operation = model.createResource(namespace + operationName);
         Resource classResource = model.getResource(namespace + classResourceName);
@@ -250,6 +259,14 @@ public class SemanticEnvironmentImpl implements SemanticEnvironment{
         Resource propName = model.createResource(propertyName);
         Property property = model.getProperty(propName.getNameSpace(), propName.getLocalName());
         Literal value = model.createLiteral(String.valueOf(propertyValue));
+        model.add(model.createStatement(resourceInstance, property, value));
+    }
+
+    private void updateDataPoropertyValue(Resource resourceInstance, String propertyName, Object propertyValue){
+        Resource propName = model.createResource(propertyName);
+        Property property = model.getProperty(propName.getNameSpace(), propName.getLocalName());
+        Literal value = model.createLiteral(String.valueOf(propertyValue));
+        model.remove(model.getProperty(resourceInstance, property));
         model.add(model.createStatement(resourceInstance, property, value));
     }
 

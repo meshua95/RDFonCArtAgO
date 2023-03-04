@@ -45,6 +45,23 @@ public interface SemanticEnvironment {
      */
     void defineDataProperty(String resourceName, String resourceId, String propertyName, String type, Object propertyValue);
 
+    /**
+     * Update data property value to an artifact instance
+     * @param resourceId
+     * @param propertyName
+     * @param propertyValue
+     */
+    void updateDataProperty(String resourceId, String propertyName, Object propertyValue);
+
+    /**
+     * Update data property value to an artifact instance
+     * @param namespace
+     * @param resourceId
+     * @param propertyName
+     * @param propertyValue
+     */
+    void updateDataProperty(String namespace, String resourceId, String propertyName, Object propertyValue);
+
     /**Add an operation to an artifact in specific namespace
      * @param namespace
      * @param operationName
