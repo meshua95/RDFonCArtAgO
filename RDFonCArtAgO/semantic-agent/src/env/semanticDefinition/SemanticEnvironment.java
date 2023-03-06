@@ -1,6 +1,14 @@
 package semanticDefinition;
 
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFWriter;
+import org.apache.jena.riot.RIOT;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface SemanticEnvironment {
 
@@ -129,7 +137,26 @@ public interface SemanticEnvironment {
      */
     void removeInstance(String resourceId);
 
+    /**
+     * remove an object property
+     * @param namespace
+     * @param name
+     * @param refId
+     * @param artifactId
+     */
+    void removeObjectProperty(String namespace, String name, String refId, String artifactId);
+
+    /**
+     * remove an object property
+     * @param name
+     * @param refId
+     * @param artifactId
+     */
+    void removeObjectProperty(String name, String refId, String artifactId);
+
     /**Create file.ttl with all statement defined in model
      */
     void printAllStatement();
+
+
 }

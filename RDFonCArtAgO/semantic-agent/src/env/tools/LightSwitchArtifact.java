@@ -20,14 +20,6 @@ public class LightSwitchArtifact extends SemanticArtifact {
         state.set(this.press);
     }
 
-    @OPERATION void connectTo(String idConnection){
-        addRelationship(idConnection);
-    }
-
-    @OPERATION void disconnectTo(String idConnection){
-        removeRelationship(idConnection);
-    }
-
     @OPERATION
     void press() {
         setPress(true);

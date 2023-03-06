@@ -26,7 +26,9 @@
             .println("Switch on...");
             switchOn [artifact_id(IdArtifact)];
             lampState(SecondState) [artifact_id(IdArtifact)];
-            .println("State: ", SecondState);.
+            .println("State: ", SecondState);
+            removeRelationship("lamp_0")[artifact_id(lsId_0)];
+            addRelationship("lamp_1")[artifact_id(lsId_0)].
 
 /* ############### */
 

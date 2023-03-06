@@ -1,6 +1,7 @@
 package semanticDefinition;
 
 import cartago.Artifact;
+import cartago.OPERATION;
 import cartago.ObsProperty;
 
 import java.lang.annotation.Annotation;
@@ -8,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class SemanticArtifact extends Artifact {
 
@@ -53,14 +55,20 @@ public abstract class SemanticArtifact extends Artifact {
     private static final String RELATIONSHIP ="connectTo";
 
     protected cartago.ObsProperty defineRelationship(String refId){
+        log("artifact id = " +  artifactId);
+        log("artifact class = " +  artifactClass);
+        log("artifact refs = " +  refId.toString());
         if (namespace.isEmpty()) {
             environment.addObjectProperty(RELATIONSHIP, refId, artifactId, artifactClass);
         } else {
             environment.addObjectProperty(namespace, RELATIONSHIP, refId, artifactId, artifactClass);
         }
-        return super.defineObsProperty(RELATIONSHIP, refId);
+        List<String> connections = new ArrayList<>();
+        connections.add(refId);
+        return super.defineObsProperty(RELATIONSHIP, connections);
     }
 
+    @OPERATION
     protected void addRelationship(String idToConnect){
         if (namespace.isEmpty()) {
             environment.addObjectProperty(RELATIONSHIP, idToConnect, artifactId, artifactClass);
@@ -68,26 +76,24 @@ public abstract class SemanticArtifact extends Artifact {
             environment.addObjectProperty(namespace, RELATIONSHIP, idToConnect, artifactId, artifactClass);
         }
         ObsProperty connections = super.getObsProperty(RELATIONSHIP);
-        String[] newConnectionsList = (String[]) connections.getValues();
-        newConnectionsList[connections.getValues().length+1] = idToConnect;
-        connections.updateValue(newConnectionsList);
+        List<String> connectionsList = new ArrayList<>((List<String>)connections.getValue());
+        connectionsList.add(idToConnect);
+        connections.updateValue(connectionsList);
     }
 
+    @OPERATION
     protected void removeRelationship(String idToConnect){
         if (namespace.isEmpty()) {
-            environment.removeObjectProperty(RELATIONSHIP, idToConnect, artifactId, artifactClass);
+            environment.removeObjectProperty(RELATIONSHIP, idToConnect, artifactId);
         } else {
             environment.removeObjectProperty(namespace, RELATIONSHIP, idToConnect, artifactId);
         }
         ObsProperty connections = super.getObsProperty(RELATIONSHIP);
-        String[] connectionsList = (String[]) connections.getValues();
-        List<String> newConnectionList = new ArrayList<>();
-        for(String s: connectionsList){
-            if(!s.equals(idToConnect)){
-                newConnectionList.add(s);
-            }
-        }
-        connections.updateValue(newConnectionList.toArray());
+        List<String> connectionsList = new ArrayList<>((List<String>)connections.getValue());
+        connectionsList = connectionsList.stream()
+                .filter(s -> !s.equals(idToConnect))
+                .collect(Collectors.toList());
+        connections.updateValue(connectionsList);
     }
     public void updateValue(String property, Object value){
         ObsProperty state = getObsProperty(property);

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SemanticEnvironmentImpl { //implements SemanticEnvironment
+public class SemanticEnvironmentImpl implements SemanticEnvironment{
 
     private static final String owlNamespace = "http://www.w3.org/2002/07/owl#";
     private static final String rdfSchemaNamespace = "http://www.w3.org/2000/01/rdf-schema#";
@@ -129,6 +129,7 @@ public class SemanticEnvironmentImpl { //implements SemanticEnvironment
             Property prop = model.getProperty(namespace, name);
             model.add(model.createStatement(firstInstance, prop, secondInstance));
         }
+        printAllStatement();
     }
 
     public void addObjectProperty(String name, String refId, String artifactId, String artifactClass) {
@@ -137,9 +138,10 @@ public class SemanticEnvironmentImpl { //implements SemanticEnvironment
 
     public void removeObjectProperty(String namespace, String name, String refId, String artifactId) {
         Resource firstInstance = model.getResource(namespace + artifactId);
-        Resource secondInstance = model.getResource(namespace + refId);
+        Resource secondInstance = model.getResource(getResourceNamespace(refId) + refId);
         Property prop = model.getProperty(namespace, name);
         model.remove(model.createStatement(firstInstance, prop, secondInstance));
+        printAllStatement();
     }
 
     public void removeObjectProperty(String name, String refId, String artifactId) {
@@ -268,14 +270,16 @@ public class SemanticEnvironmentImpl { //implements SemanticEnvironment
     }
 
     private void addDataPropertyValue(Resource resourceInstance, String propertyName, Object propertyValue){
-        Resource propName = model.createResource(propertyName);
+        String namespace = getResourceNamespace(propertyName);
+        Resource propName = model.createResource(namespace + propertyName);
         Property property = model.getProperty(propName.getNameSpace(), propName.getLocalName());
         Literal value = model.createLiteral(String.valueOf(propertyValue));
         model.add(model.createStatement(resourceInstance, property, value));
     }
 
     private void updateDataPoropertyValue(Resource resourceInstance, String propertyName, Object propertyValue){
-        Resource propName = model.createResource(propertyName);
+        String namespace = getResourceNamespace(propertyName);
+        Resource propName = model.createResource(namespace + propertyName);
         Property property = model.getProperty(propName.getNameSpace(), propName.getLocalName());
         Literal value = model.createLiteral(String.valueOf(propertyValue));
         model.remove(model.getProperty(resourceInstance, property));
@@ -283,7 +287,7 @@ public class SemanticEnvironmentImpl { //implements SemanticEnvironment
     }
 
     private void addDataProperty(String namespace, Resource classResource, String propertyName, String propertyType) {
-        Resource propName = model.createResource(propertyName);
+        Resource propName = model.createResource(namespace + propertyName);
         setRange(propName, namespace, propertyType);
         setDomain(propName, classResource);
         setDataType(propName);
