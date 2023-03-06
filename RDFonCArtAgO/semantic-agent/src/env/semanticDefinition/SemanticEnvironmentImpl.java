@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SemanticEnvironmentImpl implements SemanticEnvironment{
+public class SemanticEnvironmentImpl { //implements SemanticEnvironment
 
     private static final String owlNamespace = "http://www.w3.org/2002/07/owl#";
     private static final String rdfSchemaNamespace = "http://www.w3.org/2000/01/rdf-schema#";
@@ -122,9 +122,10 @@ public class SemanticEnvironmentImpl implements SemanticEnvironment{
             setObjecProperty(objProperty);
         }
 
-        if(checkCanRelate(namespace, refId)){
+        String refIdNamespace = getResourceNamespace(refId);
+        if(checkCanRelate(refIdNamespace, refId)){
             Resource firstInstance = model.getResource(namespace + artifactId);
-            Resource secondInstance = model.getResource(namespace + refId);
+            Resource secondInstance = model.getResource(refIdNamespace + refId);
             Property prop = model.getProperty(namespace, name);
             model.add(model.createStatement(firstInstance, prop, secondInstance));
         }
@@ -134,7 +135,19 @@ public class SemanticEnvironmentImpl implements SemanticEnvironment{
         addObjectProperty(base, name, refId, artifactId, artifactClass);
     }
 
+    public void removeObjectProperty(String namespace, String name, String refId, String artifactId) {
+        Resource firstInstance = model.getResource(namespace + artifactId);
+        Resource secondInstance = model.getResource(namespace + refId);
+        Property prop = model.getProperty(namespace, name);
+        model.remove(model.createStatement(firstInstance, prop, secondInstance));
+    }
+
+    public void removeObjectProperty(String name, String refId, String artifactId) {
+        removeObjectProperty(base, name, refId, artifactId);
+    }
+
     public Model getModel(){
+        printAllStatement();
         return this.model;
     }
 
@@ -156,7 +169,6 @@ public class SemanticEnvironmentImpl implements SemanticEnvironment{
         }
 
         Resource resourceInstance = model.getResource(namespace + resourceId);
-        //removePrevEvent(resourceInstance);
         Property prop = model.createProperty(namespace + eventName);
         Date timestamp = new Date();
         model.add(model.createStatement(resourceInstance, prop, timestamp.toString()));
@@ -303,6 +315,16 @@ public class SemanticEnvironmentImpl implements SemanticEnvironment{
 
     public void removeInstance(String resourceId){
         removeInstance(base, resourceId);
+    }
+
+    private String getResourceNamespace(String resourceLocalName){
+        List<Statement> subjectStatements = model.listStatements().toList();
+        for(Statement s: subjectStatements){
+            if(s.getSubject().getLocalName().equals(resourceLocalName)){
+                return s.getSubject().getNameSpace();
+            }
+        }
+        return "";
     }
 
 }

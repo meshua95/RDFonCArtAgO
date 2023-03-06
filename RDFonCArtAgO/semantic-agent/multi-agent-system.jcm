@@ -17,6 +17,7 @@ mas semantic_multi_agent_system {
     workspace jacamo {
 
         artifact lamp_0: tools.LampArtifact("false")
-        artifact lightSwtich_0: tools.LightSwitchArtifact("false", "lamp_0")
+        artifact lamp_1: tools.LampArtifact("false")
+        /* artifact lightSwtich_0: tools.LightSwitchArtifact("false", "lamp_0") */
     }
 }

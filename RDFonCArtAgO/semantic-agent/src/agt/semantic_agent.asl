@@ -12,7 +12,9 @@
 /* Plans. */
     /* Proactive plans. */
     +!start
-        <-  makeArtifact(service, "tools.ServiceArtifact", [], ServiceRef);
+        <-  ?isPressed(InitialLSState);
+            makeArtifact(lsId_0, "tools.LightSwitchArtifact", [InitialLSState, lamp_0], LSRef);
+            makeArtifact(service, "tools.ServiceArtifact", [], ServiceRef);
             .println("Query: SELECT ?id WHERE {?subject rdfs:subClassOf :Device . ?id rdf:type ?subject}");
             query("SELECT ?id WHERE { ?id rdf:type :Lamp }", ResultSet);
             getAtIndex(0, ResultSet, Element);

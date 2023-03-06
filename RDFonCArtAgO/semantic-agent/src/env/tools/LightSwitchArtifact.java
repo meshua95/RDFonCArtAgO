@@ -13,11 +13,19 @@ public class LightSwitchArtifact extends SemanticArtifact {
 
         this.press = isPressed;
         defineObsProperty(pressPropertyName, "boolean", this.press);
-        defineRelationship("connectedTo", idConnection);
+        defineRelationship(idConnection);
     }
 
     @OPERATION void lightSwitchState(OpFeedbackParam<Boolean> state) {
         state.set(this.press);
+    }
+
+    @OPERATION void connectTo(String idConnection){
+        addRelationship(idConnection);
+    }
+
+    @OPERATION void disconnectTo(String idConnection){
+        removeRelationship(idConnection);
     }
 
     @OPERATION

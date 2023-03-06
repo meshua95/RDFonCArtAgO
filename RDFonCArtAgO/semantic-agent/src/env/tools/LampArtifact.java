@@ -3,9 +3,6 @@ package tools;
 import cartago.*;
 import semanticDefinition.SemanticArtifact;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class LampArtifact extends SemanticArtifact {
 
 	/*PROPERTIES*/
@@ -25,13 +22,13 @@ public class LampArtifact extends SemanticArtifact {
 	/*OPERATIONS*/
 	@OPERATION void switchOn() {
 		this.on = true;
-		updateValue("stateOn", this.on);
+		updateValue(statePropertyName, true);
 		signal("is_on");
 	}
 
 	@OPERATION void switchOff() {
 		this.on = false;
-		updateValue("stateOn", this.on);
+		updateValue(statePropertyName, false);
 		signal("is_off");
 	}
 
