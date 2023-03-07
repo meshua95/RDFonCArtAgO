@@ -51,7 +51,6 @@ public class ServiceArtifact extends Artifact {
 
     @OPERATION
     public void getValue(String var, QuerySolution elem, OpFeedbackParam<String> val){
-        log(elem.getResource(var).getLocalName());
         val.set(elem.getResource(var).getLocalName());
     }
 

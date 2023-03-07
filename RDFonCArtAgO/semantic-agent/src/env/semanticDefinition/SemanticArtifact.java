@@ -55,9 +55,6 @@ public abstract class SemanticArtifact extends Artifact {
     private static final String RELATIONSHIP ="connectTo";
 
     protected cartago.ObsProperty defineRelationship(String refId){
-        log("artifact id = " +  artifactId);
-        log("artifact class = " +  artifactClass);
-        log("artifact refs = " +  refId.toString());
         if (namespace.isEmpty()) {
             environment.addObjectProperty(RELATIONSHIP, refId, artifactId, artifactClass);
         } else {
